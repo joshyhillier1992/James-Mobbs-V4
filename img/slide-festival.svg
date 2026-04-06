@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#0D0420"/>
+      <stop offset="40%"  stop-color="#2A0A5A"/>
+      <stop offset="72%"  stop-color="#7A2010"/>
+      <stop offset="88%"  stop-color="#D05000"/>
+      <stop offset="100%" stop-color="#F08018"/>
+    </linearGradient>
+    <radialGradient id="sunGlow" cx="50%" cy="88%" r="40%">
+      <stop offset="0%"   stop-color="#FFD040" stop-opacity="0.8"/>
+      <stop offset="35%"  stop-color="#FF8020" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#FF6010" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="leftLight" cx="18%" cy="55%" r="35%">
+      <stop offset="0%"   stop-color="#FF9030" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#FF9030" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="rightLight" cx="82%" cy="50%" r="32%">
+      <stop offset="0%"   stop-color="#AA30FF" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#AA30FF" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="bigBlur"   x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="30"/></filter>
+    <filter id="medBlur"   x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="10"/></filter>
+    <filter id="bokehBlur" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="8"/></filter>
+    <filter id="hazeBlur"  x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="50"/></filter>
+  </defs>
+
+  <!-- Sky base -->
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <rect width="1600" height="900" fill="url(#sunGlow)"/>
+  <rect width="1600" height="900" fill="url(#leftLight)"/>
+  <rect width="1600" height="900" fill="url(#rightLight)"/>
+
+  <!-- Stars -->
+  <g opacity="0.7">
+    <circle cx="120"  cy="80"  r="1.5" fill="#FFFFFF"/>
+    <circle cx="280"  cy="55"  r="1"   fill="#FFFFFF"/>
+    <circle cx="440"  cy="100" r="1.5" fill="#FFFFFF"/>
+    <circle cx="600"  cy="45"  r="1"   fill="#FFFFFF"/>
+    <circle cx="750"  cy="70"  r="2"   fill="#FFFFFF"/>
+    <circle cx="980"  cy="40"  r="1.5" fill="#FFFFFF"/>
+    <circle cx="1150" cy="90"  r="1"   fill="#FFFFFF"/>
+    <circle cx="1320" cy="55"  r="1.5" fill="#FFFFFF"/>
+    <circle cx="1480" cy="80"  r="1"   fill="#FFFFFF"/>
+    <circle cx="200"  cy="130" r="1"   fill="#FFFFFF"/>
+    <circle cx="860"  cy="30"  r="1"   fill="#FFFFFF"/>
+    <circle cx="1060" cy="120" r="1.5" fill="#FFFFFF"/>
+  </g>
+
+  <!-- Atmosphere / haze near horizon -->
+  <ellipse cx="800" cy="680" rx="900" ry="200" fill="#FF8820" opacity="0.18" filter="url(#hazeBlur)"/>
+  <ellipse cx="800" cy="720" rx="800" ry="150" fill="#CC4400" opacity="0.12" filter="url(#hazeBlur)"/>
+
+  <!-- Stage lighting beams (wide fans) -->
+  <g opacity="0.12" filter="url(#bigBlur)">
+    <polygon points="380,380 100,900 620,900"  fill="#FF9030"/>
+    <polygon points="640,360 380,900 820,900"  fill="#FFCC40"/>
+    <polygon points="960,360 780,900 1060,900" fill="#AA30FF"/>
+    <polygon points="1220,380 980,900 1500,900" fill="#FF6020"/>
+  </g>
+
+  <!-- Stage truss structure -->
+  <g fill="#060408">
+    <!-- Main horizontal truss top -->
+    <rect x="180" y="360" width="1240" height="14" rx="4"/>
+    <!-- Vertical supports -->
+    <rect x="200"  y="360" width="16" height="280" rx="4"/>
+    <rect x="480"  y="360" width="12" height="260" rx="4"/>
+    <rect x="760"  y="360" width="12" height="270" rx="4"/>
+    <rect x="1040" y="360" width="12" height="260" rx="4"/>
+    <rect x="1380" y="360" width="16" height="280" rx="4"/>
+    <!-- Stage roof -->
+    <rect x="140" y="340" width="1320" height="24" rx="6"/>
+    <!-- Cross braces -->
+    <line x1="216" y1="374" x2="488" y2="630" stroke="#060408" stroke-width="8"/>
+    <line x1="488" y1="374" x2="216" y2="630" stroke="#060408" stroke-width="8"/>
+    <line x1="772" y1="374" x2="1044" y2="630" stroke="#060408" stroke-width="8"/>
+    <line x1="1044" y1="374" x2="772" y2="630" stroke="#060408" stroke-width="8"/>
+  </g>
+
+  <!-- Stage lights on truss (bright dots) -->
+  <g filter="url(#bokehBlur)">
+    <circle cx="220"  cy="375" r="12" fill="#FFE040" opacity="0.9"/>
+    <circle cx="340"  cy="375" r="10" fill="#FF6020" opacity="0.85"/>
+    <circle cx="480"  cy="375" r="12" fill="#FFFFFF" opacity="0.8"/>
+    <circle cx="620"  cy="375" r="10" fill="#FF4090" opacity="0.85"/>
+    <circle cx="760"  cy="375" r="12" fill="#FFD030" opacity="0.9"/>
+    <circle cx="900"  cy="375" r="10" fill="#40AAFF" opacity="0.8"/>
+    <circle cx="1040" cy="375" r="12" fill="#FFFFFF" opacity="0.85"/>
+    <circle cx="1180" cy="375" r="10" fill="#FF6020" opacity="0.85"/>
+    <circle cx="1380" cy="375" r="12" fill="#FFE040" opacity="0.9"/>
+  </g>
+
+  <!-- Stage platform / LED screen -->
+  <rect x="200" y="640" width="1200" height="100" rx="4" fill="#0A0510" opacity="0.9"/>
+  <rect x="205" y="645" width="1190" height="90"  rx="2" fill="#1A0828" opacity="0.8"/>
+  <!-- LED screen glow -->
+  <rect x="205" y="645" width="1190" height="90" rx="2" fill="#8020C0" opacity="0.25" filter="url(#medBlur)"/>
+
+  <!-- Crowd silhouette (layered for depth) -->
+  <path d="M0,790 Q50,760 90,778 Q130,750 175,772 Q220,745 280,768 Q340,748 400,765 Q470,745 550,768 Q630,748 720,770 Q800,750 880,770 Q960,748 1050,768 Q1130,750 1210,770 Q1280,748 1360,770 Q1420,752 1500,772 Q1560,758 1600,778 L1600,900 L0,900Z" fill="#0A0510" opacity="0.9"/>
+  <path d="M0,815 Q60,795 110,808 Q160,788 220,802 Q280,785 360,800 Q450,782 540,798 Q640,782 740,800 Q840,783 940,800 Q1040,784 1140,800 Q1240,783 1340,800 Q1420,786 1500,802 Q1560,790 1600,806 L1600,900 L0,900Z" fill="#060310" opacity="0.95"/>
+
+  <!-- Festival lights (bokeh in crowd) -->
+  <g filter="url(#bokehBlur)">
+    <circle cx="150"  cy="775" r="8"  fill="#FFD040" opacity="0.8"/>
+    <circle cx="270"  cy="758" r="6"  fill="#FF8020" opacity="0.75"/>
+    <circle cx="420"  cy="772" r="10" fill="#FFFFFF"  opacity="0.7"/>
+    <circle cx="580"  cy="756" r="7"  fill="#FFD040" opacity="0.8"/>
+    <circle cx="720"  cy="770" r="9"  fill="#FF4090" opacity="0.7"/>
+    <circle cx="870"  cy="755" r="6"  fill="#FFAA20" opacity="0.75"/>
+    <circle cx="1020" cy="770" r="10" fill="#FFFFFF"  opacity="0.65"/>
+    <circle cx="1170" cy="756" r="7"  fill="#FFD040" opacity="0.75"/>
+    <circle cx="1310" cy="772" r="8"  fill="#FF8030" opacity="0.7"/>
+    <circle cx="1450" cy="760" r="6"  fill="#FFCC30" opacity="0.8"/>
+  </g>
+</svg>

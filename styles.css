@@ -1,0 +1,1070 @@
+:root {
+  --bg-dark:       #05060a;
+  --bg-deep:       #080b12;
+  --accent-orange: #ff7b2c;
+  --accent-pink:   #ff2c7b;
+  --accent-lime:   #91ff4c;
+  --accent-cyan:   #4cf5ff;
+  --text-main:     #ffffff;
+  --text-muted:    #a8aabb;
+
+  --radius-pill: 999px;
+  --radius-card: 24px;
+
+  --shadow-soft:  0 26px 90px rgba(0, 0, 0, 0.55);
+  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.07);
+  --blur-glass:   blur(24px) saturate(180%);
+
+  /* ── Spacing (1rem = 16px base) */
+  --space-1: 1rem;    /* 16px */
+  --space-2: 1.5rem;  /* 24px */
+  --space-3: 2rem;    /* 32px */
+  --space-4: 3rem;    /* 48px */
+  --space-5: 4rem;    /* 64px */
+
+  /* Type scale */
+  --step--1: 0.85rem;
+  --step-0:  1rem;
+  --step-1:  1.5rem;
+  --step-2:  2.25rem;
+  --step-3:  3.375rem;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+/* overflow-x on both html+body is the only reliable cross-browser
+   way to prevent horizontal scroll from fixed/transformed elements
+   without breaking position:fixed children.                        */
+html { overflow-x: hidden; }
+
+body.site {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Alexandria", system-ui, -apple-system, BlinkMacSystemFont,
+               "SF Pro Text", "Segoe UI", sans-serif;
+  color: var(--text-main);
+  background: #000000;
+  position: relative;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Single layout container — all sections share this gutter + max-width */
+.site-layout {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 var(--space-1); /* 1rem (16px) gutter each side */
+}
+
+/* Page-level dynamic ambient — contained to the hero/header zone only */
+.site__gradient {
+  position: fixed;
+  top: -15%;
+  left: -8%;
+  right: -8%;
+  height: 75vh;           /* stops well before mid-page */
+  pointer-events: none;
+  background-size: cover;
+  background-position: center top;
+  filter: blur(100px) saturate(220%) brightness(0.4);
+  transform: scale(1.2);
+  opacity: 0;
+  z-index: 0;
+  transition: opacity 0.5s ease;
+  /* fade out at the bottom so there's no hard edge */
+  -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+}
+
+.site__gradient.is-visible {
+  opacity: 0.4;
+}
+
+
+/* ── Header ──────────────────────────────────── */
+
+.site-header {
+  position: sticky;
+  top: 1rem;
+  z-index: 40;
+  padding: 0;
+  pointer-events: none;
+}
+
+.site-header__inner {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: var(--space-1) 0 0; /* 1rem top */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: none;
+  backdrop-filter: none;
+  pointer-events: none;
+}
+
+.site-header__inner > * {
+  pointer-events: auto;
+}
+
+.brand-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.22), 0 4px 16px rgba(0,0,0,0.4);
+  text-decoration: none;
+  overflow: hidden;
+}
+
+/* ── Blob logo ────────────────────────────────────── */
+
+/* Backdrop blur layer — sits under the blob when expanded */
+.blob-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 148;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.7s ease;
+}
+
+.blob-backdrop.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* The blob container — always fixed, positioned to match header */
+.blob-logo {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  width: 96px;
+  height: 96px;
+  z-index: 150;
+  border-radius: 50%;
+  overflow: hidden;        /* clips the WebGL canvas to the circle */
+  cursor: pointer;
+  transition:
+    top            0.75s cubic-bezier(0.85, 0, 0.15, 1),
+    left           0.75s cubic-bezier(0.85, 0, 0.15, 1),
+    width          0.75s cubic-bezier(0.85, 0, 0.15, 1),
+    height         0.75s cubic-bezier(0.85, 0, 0.15, 1),
+    border-radius  0.75s cubic-bezier(0.85, 0, 0.15, 1);
+}
+
+.blob-logo.is-expanded {
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+  cursor: default;
+}
+
+/* Canvas wrapper — w-full h-full relative, mirrors blobb/index.html */
+.blob-logo__canvas {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* Canvas element — Three.js controls its own pixel dimensions */
+.blob-logo__canvas canvas {
+  display: block;
+}
+
+/* JM text overlay (#blob-logo) — visible when collapsed */
+#blob-logo {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 10;
+  transition: opacity 0.2s ease;
+  user-select: none;
+}
+
+#blob-logo span {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.90);
+  line-height: 1;
+  /* sit on top of the canvas — mix-blend-mode makes it read on the blob */
+  mix-blend-mode: overlay;
+}
+
+/* Close button (#close-blob) — hidden until expanded */
+#close-blob {
+  display: none;
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  background: rgba(0, 0, 0, 0.20);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: rgba(255, 255, 255, 0.70);
+  font-family: "Alexandria", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 8px 20px;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+#close-blob:hover { color: #fff; }
+
+.blob-logo.is-expanded #close-blob {
+  display: block;
+}
+
+/* Header spacer — keeps flex layout balanced where blob logo was */
+.blob-logo-placeholder {
+  width: 96px;
+  height: 96px;
+  flex-shrink: 0;
+}
+
+.brand-pill__logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  backdrop-filter: var(--blur-glass);
+}
+
+.main-nav__item,
+.main-nav__search {
+  border: none;
+  background: transparent;
+  color: var(--text-main);
+  font: 500 var(--step-0) / 1 "Alexandria", system-ui, sans-serif;
+  padding: 11px 22px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  opacity: 0.65;
+  transition: background 150ms, opacity 150ms;
+  white-space: nowrap;
+}
+
+.main-nav__item:hover,
+.main-nav__search:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.main-nav__item--active {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.96);
+  color: #070716;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.main-nav__search-icon {
+  display: inline-block;
+  width: 17px;
+  height: 17px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  position: relative;
+  vertical-align: middle;
+}
+
+.main-nav__search-icon::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 4px;
+  transform: translate(10px, 8px) rotate(40deg);
+  transform-origin: left center;
+}
+
+.cta-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 13px 26px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.96);
+  color: #0a0a14;
+  text-decoration: none;
+  font-family: "Bebas Neue", system-ui, sans-serif;
+  font-size: 17px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+  white-space: nowrap;
+  transition: background 150ms, transform 120ms;
+}
+
+.cta-pill:hover {
+  background: #ffffff;
+  transform: translateY(-1px);
+}
+
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.menu-toggle span {
+  width: 18px;
+  height: 2px;
+  border-radius: 999px;
+  background: #ffffff;
+}
+
+
+/* ── Hero Carousel ───────────────────────────── */
+
+.hero-carousel {
+  position: relative;
+  /* Pull up behind the nav (nav height ~60px) so it overlaps the top of the card.
+     Bottom margin matches the body's 1rem side gutters for visual consistency. */
+  margin: -3.5rem 0 var(--space-1);
+  z-index: 1;
+}
+
+/* Local ambient — subtle glow around the card */
+.carousel__ambient {
+  position: absolute;
+  inset: -18% -6%;
+  background-size: cover;
+  background-position: center;
+  filter: blur(80px) saturate(160%) brightness(0.45);
+  transform: scale(1.1);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.6s ease;
+  -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+}
+
+.carousel__ambient.is-visible {
+  opacity: 0.55;
+}
+
+.carousel__viewport {
+  position: relative;
+  z-index: 1;
+  /* clip only on the X axis — hides peeking slides at the sides
+     overflow-y stays visible so card shadows + glass edges bleed freely top & bottom */
+  overflow-x: clip;
+  overflow-y: visible;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.carousel__viewport.is-dragging {
+  cursor: grabbing;
+}
+
+.carousel__track {
+  display: flex;
+  gap: 0.4rem;
+  will-change: transform;
+  transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.carousel__track.no-transition {
+  transition: none;
+}
+
+/* Slides ~85% wide — ~7-8% of each neighbour peeks either side */
+.carousel__slide {
+  flex: 0 0 85%;
+  min-width: 0;
+  transition: opacity 1s ease, transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform-origin: center center;
+}
+
+/* Cloned ghost slides — same appearance, no special styling needed */
+.carousel__slide.is-clone { pointer-events: none; }
+
+/* Card — glassmorphic frame */
+.carousel__frame {
+  position: relative;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  box-shadow:
+    /* depth */
+    0 60px 140px rgba(0, 0, 0, 0.95),
+    0 16px 48px  rgba(0, 0, 0, 0.7),
+    /* outer glass hairline */
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    /* inner bright top — primary specular */
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.30),
+    /* inner side edges — subtle side-light */
+    inset 1.5px 0 0 rgba(255, 255, 255, 0.06),
+    inset -1.5px 0 0 rgba(255, 255, 255, 0.06),
+    /* inner bottom — barely visible floor reflection */
+    inset 0 -1px 0 rgba(255, 255, 255, 0.03);
+}
+
+/* Active slide — bright edge light */
+.carousel__slide.is-active .carousel__frame {
+  box-shadow:
+    0 60px 140px rgba(0, 0, 0, 0.95),
+    0 16px 48px  rgba(0, 0, 0, 0.7),
+    /* brighter outer rim */
+    0 0 0 1.5px rgba(255, 255, 255, 0.28),
+    /* outer ambient glow */
+    0 0 40px 6px  rgba(255, 255, 255, 0.07),
+    0 0 80px 16px rgba(180, 130, 255, 0.09),
+    /* inner specular — top bright, sides lit */
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.60),
+    inset 1.5px 0 0 rgba(255, 255, 255, 0.18),
+    inset -1.5px 0 0 rgba(255, 255, 255, 0.18),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* Project image (SVG placeholder) */
+.carousel__media {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 8s ease;
+}
+
+.carousel__slide.is-active .carousel__media {
+  transform: scale(1.04); /* subtle Ken Burns drift */
+}
+
+.carousel__media--hits     { background-image: url('img/hero-placeholder.png'); }
+.carousel__media--festival { background-image: url('img/slide-festival.jpg'); }
+.carousel__media--brand    { background-image: url('img/slide-brand.jpg'); }
+
+/* Soft vignette — let the image breathe, glass panel handles text legibility */
+.carousel__media-fade {
+  position: absolute;
+  inset: 0;
+  background:
+    /* Subtle top scrim so header area doesn't blow out */
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.18) 0%, transparent 28%),
+    /* Edge vignette */
+    radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.45) 100%);
+}
+
+/* Info panel — gradient only (no backdrop-filter, it kills fps over moving images) */
+.carousel__info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  background: linear-gradient(to top,
+    rgba(4, 4, 16, 0.95) 0%,
+    rgba(4, 4, 16, 0.80) 40%,
+    rgba(4, 4, 16, 0.30) 75%,
+    transparent 100%
+  );
+}
+
+.carousel__info-top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+
+/* Hits Radio logo badge */
+.carousel__logo--hits {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--accent-orange);
+  border-radius: 8px;
+  padding: 6px 9px 4px;
+  line-height: 1;
+  gap: 1px;
+}
+
+.logo-hits-main {
+  font-family: "Bebas Neue", system-ui, sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+
+.logo-hits-sub {
+  font-family: "Bebas Neue", system-ui, sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+}
+
+.carousel__tag {
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.92);
+  white-space: nowrap;
+}
+
+.carousel__title {
+  margin: 0;
+  font-family: "Bebas Neue", system-ui, sans-serif;
+  font-size: clamp(var(--step-2), 4.5vw, var(--step-3));
+  line-height: 0.95;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.carousel__standfirst {
+  margin: 0;
+  max-width: 520px;
+  font-size: var(--step-0);
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+
+/* ── Case Studies ────────────────────────────── */
+
+.case-studies {
+  margin: 0 0 var(--space-5);
+  padding: 0;
+}
+
+.section-title {
+  margin: 0 0 var(--space-1);
+  font-size: var(--step--1);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.case-studies__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.case-studies__subtitle {
+  margin: 0;
+  max-width: 420px;
+  font-size: var(--step--1);
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+.case-studies__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+/* Netflix-style glass cards */
+.case-card {
+  position: relative;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-glass);
+  cursor: pointer;
+  transition:
+    transform  0.28s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.28s ease,
+    border-color 0.28s ease;
+}
+
+/* Specular highlight along top edge */
+.case-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(175deg, rgba(255,255,255,0.07) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.case-card:hover {
+  transform: translateY(-8px) scale(1.01);
+  box-shadow:
+    0 40px 90px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.case-card--wide {
+  grid-column: span 2;
+}
+
+.case-card__media {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+  transition: transform 0.4s ease;
+}
+
+.case-card:hover .case-card__media {
+  transform: scale(1.06);
+}
+
+.case-card__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, rgba(4,4,16,0.85) 0%, rgba(4,4,16,0.2) 60%, transparent 100%);
+  z-index: 1;
+}
+
+.case-card__media--hits     { background-image: url('img/hero-placeholder.png'); }
+.case-card__media--festival { background-image: url('img/slide-festival.jpg'); }
+.case-card__media--brand    { background-image: url('img/slide-brand.jpg'); }
+
+.case-card__content {
+  padding: var(--space-1) var(--space-2) var(--space-2);
+}
+
+.case-card__overline {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 6px;
+}
+
+.case-card__title {
+  margin: 0 0 6px;
+  font-family: "Bebas Neue", system-ui, sans-serif;
+  font-size: var(--step-1);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-main);
+}
+
+.case-card__meta {
+  margin: 0;
+  font-size: var(--step--1);
+  color: var(--text-muted);
+}
+
+
+/* ── Responsive ──────────────────────────────── */
+
+@media (max-width: 900px) {
+  .site-header__inner {
+    padding-inline: var(--space-1);
+  }
+
+  .main-nav {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+
+  .hero-carousel {
+    margin-top: -3rem;
+  }
+
+  .carousel__frame {
+    aspect-ratio: 4 / 3;
+    border-radius: 14px;
+  }
+
+  .carousel__info {
+    padding: var(--space-2);
+  }
+
+
+  .case-studies__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .case-studies__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .case-card--wide {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero-carousel {
+    margin-top: -2.5rem;
+  }
+
+  .carousel__frame {
+    aspect-ratio: 4 / 5;
+    border-radius: 10px;
+  }
+
+  .carousel__standfirst {
+    display: none;
+  }
+
+
+  .case-studies__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+
+/* ── Intro animation ─────────────────────────── */
+
+.site-header,
+.hero-carousel,
+.case-studies {
+  will-change: opacity, transform;
+}
+
+/* Pre-load state — invisible */
+body:not(.is-loaded) .site-header  { opacity: 0; transform: translateY(-10px); }
+body:not(.is-loaded) .hero-carousel { opacity: 0; transform: scale(0.97); }
+body:not(.is-loaded) .case-studies  { opacity: 0; transform: translateY(16px); }
+
+/* Transition in */
+body.is-loaded .site-header {
+  opacity: 1; transform: none;
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+body.is-loaded .hero-carousel {
+  opacity: 1; transform: none;
+  transition: opacity 0.7s ease 0.1s, transform 0.7s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+}
+body.is-loaded .case-studies {
+  opacity: 1; transform: none;
+  transition: opacity 0.6s ease 0.35s, transform 0.6s ease 0.35s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body:not(.is-loaded) .site-header,
+  body:not(.is-loaded) .hero-carousel,
+  body:not(.is-loaded) .case-studies {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+
+/* ── Frame edge-sweep timer ──────────────────── */
+
+/* SVG sits exactly on top of the frame, pointer-events off */
+.carousel__sweep {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 3;
+  overflow: visible;
+}
+
+/* Both sweep paths — dasharray/dashoffset set by JS */
+.carousel__sweep-cw,
+.carousel__sweep-ccw {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.55);
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  transition: none;
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.50))
+          drop-shadow(0 0 12px rgba(180, 140, 255, 0.30));
+}
+
+
+/* ── More Projects (horizontal scroll list) ──── */
+
+.projects {
+  margin: 0 0 var(--space-5);
+}
+
+.projects__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+}
+
+.projects__see-all {
+  font-size: var(--step--1);
+  color: rgba(255, 255, 255, 0.45);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  transition: color 0.2s ease;
+}
+.projects__see-all:hover { color: #ffffff; }
+
+/* Overflow strip — scrolls horizontally, no scrollbar */
+.projects__strip {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 4px; /* room for focus rings */
+}
+.projects__strip::-webkit-scrollbar { display: none; }
+
+.project-card {
+  flex: 0 0 280px;
+  scroll-snap-align: start;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.03);
+  /* Glassmorphic border */
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 1px 0 0 rgba(255, 255, 255, 0.05),
+    inset -1px 0 0 rgba(255, 255, 255, 0.05),
+    0 8px 32px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s ease;
+}
+.project-card:hover {
+  transform: translateY(-5px);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.18),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.25),
+    inset 1px 0 0 rgba(255, 255, 255, 0.08),
+    inset -1px 0 0 rgba(255, 255, 255, 0.08),
+    0 20px 60px rgba(0, 0, 0, 0.65);
+}
+
+.project-card__thumb {
+  aspect-ratio: 16 / 9;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+/* Subtle bottom fade into the card body */
+.project-card__thumb::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 55%, rgba(0,0,0,0.45) 100%);
+}
+
+.project-card__thumb--a { background: linear-gradient(135deg, #1a0a3a, #ff2c7b 140%); }
+.project-card__thumb--b { background: linear-gradient(135deg, #0a1a3a, #4cf5ff 140%); }
+.project-card__thumb--c { background: linear-gradient(135deg, #1a2a0a, #91ff4c 140%); }
+.project-card__thumb--d { background: linear-gradient(135deg, #2a1a0a, #ff7b2c 140%); }
+
+.project-card__body {
+  padding: 0.875rem 1rem 1.125rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.project-card__type {
+  display: block;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.35);
+  margin-bottom: 5px;
+}
+
+.project-card__title {
+  margin: 0;
+  font-family: "Bebas Neue", system-ui, sans-serif;
+  font-size: var(--step-1);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-main);
+}
+
+
+/* ── Footer ──────────────────────────────────── */
+
+.site-footer {
+  position: relative;
+  margin-top: var(--space-5);
+  padding: var(--space-5) 0 var(--space-3);
+  /* Radial top-centre glow matching the reference */
+  background: radial-gradient(50% 80px at 50% 0%, rgba(255,255,255,0.06) 0%, transparent 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Blurred pill accent on the top edge */
+.site-footer::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 33%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.35);
+  filter: blur(3px);
+  border-radius: 999px;
+}
+
+.site-footer__grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: var(--space-5);
+  margin-bottom: var(--space-5);
+}
+
+/* Brand column */
+.site-footer__brand {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.brand-pill--footer {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.site-footer__tagline {
+  margin: 0;
+  font-size: var(--step--1);
+  color: rgba(255, 255, 255, 0.30);
+  line-height: 1.6;
+  max-width: 240px;
+}
+
+.site-footer__copy {
+  margin: 0;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.20);
+  letter-spacing: 0.04em;
+}
+
+/* Link columns */
+.site-footer__cols {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.site-footer__col-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: rgba(255, 255, 255, 0.50);
+  margin: 0 0 var(--space-1);
+}
+
+.site-footer__col-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.site-footer__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: var(--step--1);
+  color: rgba(255, 255, 255, 0.38);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: color 0.2s ease;
+}
+.site-footer__link:hover { color: rgba(255, 255, 255, 0.90); }
+
+.site-footer__link svg {
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+/* Bottom bar */
+.site-footer__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  flex-wrap: wrap;
+}
+
+.site-footer__legal {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.site-footer__legal a {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.22);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.site-footer__legal a:hover { color: rgba(255,255,255,0.55); }
+
+@media (max-width: 900px) {
+  .site-footer__grid { grid-template-columns: 1fr; gap: var(--space-3); }
+  .site-footer__cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 480px) {
+  .site-footer__cols { grid-template-columns: minmax(0, 1fr); }
+}

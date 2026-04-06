@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+  <defs>
+    <radialGradient id="base" cx="50%" cy="50%" r="70%">
+      <stop offset="0%"   stop-color="#041828"/>
+      <stop offset="55%"  stop-color="#020B14"/>
+      <stop offset="100%" stop-color="#010508"/>
+    </radialGradient>
+    <radialGradient id="spotlight" cx="50%" cy="28%" r="45%">
+      <stop offset="0%"   stop-color="#00E8E0" stop-opacity="0.7"/>
+      <stop offset="30%"  stop-color="#00AACC" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#00AACC" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="floorPool" cx="50%" cy="100%" r="45%">
+      <stop offset="0%"   stop-color="#00CCD0" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#00CCD0" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="rimLeft" cx="0%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#0050A0" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#0050A0" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="bigBlur"   x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="35"/></filter>
+    <filter id="medBlur"   x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="12"/></filter>
+    <filter id="softBlur"  x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="5"/></filter>
+    <filter id="glowBlur"  x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="18"/></filter>
+    <filter id="sharpGlow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="2"/></filter>
+  </defs>
+
+  <!-- Base deep space -->
+  <rect width="1600" height="900" fill="url(#base)"/>
+  <rect width="1600" height="900" fill="url(#spotlight)"/>
+  <rect width="1600" height="900" fill="url(#rimLeft)"/>
+
+  <!-- Atmospheric ceiling haze -->
+  <ellipse cx="800" cy="0"   rx="500" ry="300" fill="#00E0D8" opacity="0.08" filter="url(#bigBlur)"/>
+
+  <!-- Main spotlight cone (from above) -->
+  <g opacity="0.1" filter="url(#bigBlur)">
+    <polygon points="700,0 500,900 1100,900 900,0" fill="#00E8E0"/>
+    <polygon points="740,0 620,900 980,900 860,0" fill="#00FFFF"/>
+  </g>
+
+  <!-- Floor light pool -->
+  <rect width="1600" height="900" fill="url(#floorPool)"/>
+
+  <!-- Central architectural form — abstract tower/obelisk -->
+  <g filter="url(#softBlur)">
+    <!-- Main form -->
+    <polygon points="800,80 860,760 740,760" fill="#040E18"/>
+    <!-- Left face (slightly lighter, catching light) -->
+    <polygon points="800,80 740,760 720,740" fill="#061828"/>
+    <!-- Right face -->
+    <polygon points="800,80 860,760 880,740" fill="#020A14"/>
+    <!-- Base plinth -->
+    <rect x="680" y="755" width="240" height="30" rx="4" fill="#040E18"/>
+    <rect x="660" y="780" width="280" height="20" rx="4" fill="#040E18"/>
+  </g>
+
+  <!-- Teal edge glow on object (left face) -->
+  <polygon points="800,85 741,758 725,742" fill="#00E8E0" opacity="0.12" filter="url(#sharpGlow)"/>
+  <!-- Cyan edge glow (right face) -->
+  <polygon points="800,85 858,758 875,742" fill="#00D8FF" opacity="0.08" filter="url(#sharpGlow)"/>
+
+  <!-- Object reflected glow on floor -->
+  <ellipse cx="800" cy="840" rx="140" ry="30" fill="#00E0D8" opacity="0.2" filter="url(#medBlur)"/>
+
+  <!-- Architectural floor lines / perspective grid -->
+  <g opacity="0.06" stroke="#00E8E0" stroke-width="1" filter="url(#softBlur)">
+    <line x1="800" y1="780" x2="0"    y2="900"/>
+    <line x1="800" y1="780" x2="400"  y2="900"/>
+    <line x1="800" y1="780" x2="1200" y2="900"/>
+    <line x1="800" y1="780" x2="1600" y2="900"/>
+    <line x1="800" y1="780" x2="200"  y2="900"/>
+    <line x1="800" y1="780" x2="1400" y2="900"/>
+  </g>
+
+  <!-- Floor plane (barely visible, dark reflective) -->
+  <rect x="0" y="780" width="1600" height="120" fill="#00E8E0" opacity="0.03"/>
+
+  <!-- Mist / fog layers at base -->
+  <ellipse cx="500"  cy="800" rx="300" ry="80" fill="#00C8D0" opacity="0.09" filter="url(#bigBlur)"/>
+  <ellipse cx="1100" cy="800" rx="280" ry="70" fill="#0080C0" opacity="0.08" filter="url(#bigBlur)"/>
+
+  <!-- Fine particles / atmosphere -->
+  <g opacity="0.5" filter="url(#glowBlur)">
+    <circle cx="640"  cy="200" r="2" fill="#00FFEE"/>
+    <circle cx="750"  cy="150" r="1.5" fill="#00FFFF"/>
+    <circle cx="870"  cy="180" r="2" fill="#00E8FF"/>
+    <circle cx="560"  cy="320" r="1.5" fill="#00DDEE"/>
+    <circle cx="1020" cy="280" r="2" fill="#00FFEE"/>
+    <circle cx="680"  cy="420" r="1" fill="#00FFFF"/>
+    <circle cx="930"  cy="380" r="1.5" fill="#00E0FF"/>
+  </g>
+
+  <!-- Top single source light point -->
+  <circle cx="800" cy="8" r="4"  fill="#FFFFFF" opacity="0.9"/>
+  <ellipse cx="800" cy="8" rx="80" ry="8" fill="#FFFFFF" opacity="0.05" filter="url(#glowBlur)"/>
+</svg>

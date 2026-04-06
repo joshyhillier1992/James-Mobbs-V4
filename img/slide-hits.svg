@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+  <defs>
+    <radialGradient id="base" cx="42%" cy="90%" r="85%">
+      <stop offset="0%"   stop-color="#FF5200"/>
+      <stop offset="22%"  stop-color="#D01060"/>
+      <stop offset="52%"  stop-color="#14094A"/>
+      <stop offset="100%" stop-color="#020206"/>
+    </radialGradient>
+    <radialGradient id="rimBlue" cx="72%" cy="5%" r="55%">
+      <stop offset="0%"   stop-color="#1840F0" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#1840F0" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="stageGlow" cx="50%" cy="100%" r="50%">
+      <stop offset="0%"   stop-color="#FF7828" stop-opacity="0.75"/>
+      <stop offset="100%" stop-color="#FF7828" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="pinkRim" cx="62%" cy="40%" r="35%">
+      <stop offset="0%"   stop-color="#FF1888" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#FF1888" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="bigBlur"   x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="28"/></filter>
+    <filter id="medBlur"   x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="12"/></filter>
+    <filter id="bokehBlur" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="7"/></filter>
+    <filter id="smokeBlur" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="40"/></filter>
+  </defs>
+
+  <!-- Base atmosphere -->
+  <rect width="1600" height="900" fill="url(#base)"/>
+  <rect width="1600" height="900" fill="url(#rimBlue)"/>
+  <rect width="1600" height="900" fill="url(#pinkRim)"/>
+
+  <!-- Stage floor glow -->
+  <ellipse cx="800" cy="880" rx="900" ry="220" fill="#FF6020" opacity="0.3" filter="url(#bigBlur)"/>
+  <rect width="1600" height="900" fill="url(#stageGlow)"/>
+
+  <!-- God rays from stage lights (behind performer) -->
+  <g opacity="0.13" filter="url(#bigBlur)">
+    <polygon points="680,-20 580,900 820,900"  fill="#FFAA50"/>
+    <polygon points="810,-20 740,900 900,900"  fill="#FF9030"/>
+    <polygon points="960,-20 880,900 1060,900" fill="#FF8028"/>
+    <polygon points="550,-20 440,900 660,900"  fill="#FFC060"/>
+  </g>
+
+  <!-- Smoke / haze layer -->
+  <ellipse cx="800"  cy="700" rx="600" ry="160" fill="#8020A0" opacity="0.22" filter="url(#smokeBlur)"/>
+  <ellipse cx="400"  cy="800" rx="350" ry="120" fill="#FF5010" opacity="0.15" filter="url(#smokeBlur)"/>
+  <ellipse cx="1250" cy="750" rx="300" ry="110" fill="#3040D0" opacity="0.18" filter="url(#smokeBlur)"/>
+
+  <!-- Stage platform edge -->
+  <rect x="300" y="750" width="1000" height="18" rx="4" fill="#0A0A14" opacity="0.85" filter="url(#medBlur)"/>
+  <rect x="280" y="766" width="1040" height="6"  rx="2" fill="#FF8828" opacity="0.45"/>
+
+  <!-- Performer silhouette -->
+  <g filter="url(#medBlur)">
+    <!-- Torso -->
+    <rect x="768" y="560" width="64" height="140" rx="28" fill="#050510"/>
+    <!-- Head -->
+    <circle cx="800" cy="528" r="30" fill="#050510"/>
+    <!-- Left arm raised overhead -->
+    <path d="M768,590 Q728,530 740,460" stroke="#050510" stroke-width="24" fill="none" stroke-linecap="round"/>
+    <!-- Right arm extended -->
+    <path d="M832,590 Q890,555 920,600" stroke="#050510" stroke-width="24" fill="none" stroke-linecap="round"/>
+    <!-- Left leg -->
+    <path d="M780,698 Q768,780 758,870" stroke="#050510" stroke-width="26" fill="none" stroke-linecap="round"/>
+    <!-- Right leg -->
+    <path d="M820,698 Q832,780 844,870" stroke="#050510" stroke-width="26" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- Pink rim light on performer -->
+  <ellipse cx="820" cy="570" rx="90" ry="150" fill="#FF1888" opacity="0.14" filter="url(#medBlur)"/>
+
+  <!-- Crowd silhouette -->
+  <path d="M0,870 Q80,830 130,850 Q180,820 230,845 Q280,815 350,840 Q430,808 500,835 Q570,812 650,838 Q720,815 800,836 Q880,815 950,838 Q1020,812 1100,840 Q1170,818 1260,845 Q1330,820 1400,842 Q1470,825 1540,848 Q1580,838 1600,850 L1600,900 L0,900Z" fill="#050510" opacity="0.75"/>
+
+  <!-- Bokeh — crowd lights -->
+  <g filter="url(#bokehBlur)">
+    <circle cx="180"  cy="650" r="14" fill="#FFAA20" opacity="0.7"/>
+    <circle cx="310"  cy="620" r="10" fill="#FF8040" opacity="0.6"/>
+    <circle cx="460"  cy="660" r="18" fill="#FF4090" opacity="0.55"/>
+    <circle cx="580"  cy="630" r="12" fill="#FFCC40" opacity="0.65"/>
+    <circle cx="700"  cy="650" r="8"  fill="#FF6020" opacity="0.6"/>
+    <circle cx="980"  cy="640" r="16" fill="#4060FF" opacity="0.55"/>
+    <circle cx="1100" cy="620" r="11" fill="#FF8030" opacity="0.6"/>
+    <circle cx="1240" cy="655" r="20" fill="#FF2070" opacity="0.5"/>
+    <circle cx="1380" cy="630" r="13" fill="#FFAA30" opacity="0.65"/>
+    <circle cx="240"  cy="200" r="22" fill="#FF2060" opacity="0.5"/>
+    <circle cx="1300" cy="160" r="18" fill="#4080FF" opacity="0.45"/>
+    <circle cx="120"  cy="400" r="28" fill="#FF8020" opacity="0.4"/>
+    <circle cx="1450" cy="280" r="16" fill="#FF1060" opacity="0.45"/>
+  </g>
+
+  <!-- Lens flare from stage right light -->
+  <ellipse cx="1180" cy="120" rx="6"  ry="6"  fill="#FFFFFF" opacity="0.7"/>
+  <ellipse cx="1180" cy="120" rx="60" ry="4"  fill="#FFFFFF" opacity="0.08" filter="url(#bokehBlur)"/>
+  <ellipse cx="1180" cy="120" rx="4"  ry="80" fill="#FFFFFF" opacity="0.06" filter="url(#bokehBlur)"/>
+
+  <!-- Lens flare stage left -->
+  <ellipse cx="420" cy="140" rx="5"  ry="5"  fill="#FFFFFF" opacity="0.6"/>
+  <ellipse cx="420" cy="140" rx="45" ry="3"  fill="#FFFFFF" opacity="0.07" filter="url(#bokehBlur)"/>
+</svg>

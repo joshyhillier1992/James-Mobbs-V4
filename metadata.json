@@ -1,5 +1,0 @@
-{
-  "name": "3D Gradient Blob",
-  "description": "An interactive 3D blob rendered with a custom flat gradient shader using Three.js and React. Move your mouse to warp the blob's surface.",
-  "requestFramePermissions": []
-}
