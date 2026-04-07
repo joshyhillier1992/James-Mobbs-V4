@@ -46,9 +46,9 @@
       const delta = i - domIndex;
       const abs   = Math.abs(delta);
       let scale = 1, opacity = 1;
-      if      (abs === 0) { scale = 1;    opacity = 1;    }
-      else if (abs === 1) { scale = 0.96; opacity = 0.50; }
-      else                { scale = 0.93; opacity = 0.22; }
+      if      (abs === 0) { scale = 1;     opacity = 1;    }
+      else if (abs === 1) { scale = 0.975; opacity = 0.60; }
+      else                { scale = 0.96;  opacity = 0.30; }
       slide.style.opacity   = opacity;
       slide.style.transform = `scale(${scale})`;
     });

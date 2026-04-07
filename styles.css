@@ -34,10 +34,9 @@
 *::before,
 *::after { box-sizing: border-box; }
 
-/* overflow-x on both html+body is the only reliable cross-browser
-   way to prevent horizontal scroll from fixed/transformed elements
-   without breaking position:fixed children.                        */
-html { overflow-x: hidden; }
+/* overflow-x: clip does NOT create a scroll container (unlike hidden),
+   so position:sticky on children continues to work correctly.        */
+html  { overflow-x: clip; }
 
 body.site {
   margin: 0;
@@ -48,7 +47,7 @@ body.site {
   background: #000000;
   position: relative;
   padding: 0;
-  overflow-x: hidden;
+  overflow-x: clip; /* clip, not hidden — hidden breaks position:sticky */
 }
 
 /* Single layout container — all sections share this gutter + max-width */
@@ -68,7 +67,7 @@ body.site {
   pointer-events: none;
   background-size: cover;
   background-position: center top;
-  filter: blur(100px) saturate(220%) brightness(0.4);
+  filter: blur(55px) saturate(180%) brightness(0.38);
   transform: scale(1.2);
   opacity: 0;
   z-index: 0;
@@ -128,65 +127,68 @@ body.site {
 
 /* ── Blob logo ────────────────────────────────────── */
 
-/* Backdrop blur layer — sits under the blob when expanded */
+/* Backdrop — behind the blob (z-148), above everything else.
+   backdrop-filter is ONLY applied when visible — an always-on blur at z-148
+   would composite over and blur the blob (z-40 inside the header) even when
+   the backdrop is opacity:0, making the blob appear behind a frosted layer. */
 .blob-backdrop {
   position: fixed;
   inset: 0;
   z-index: 148;
   background: rgba(0, 0, 0, 0.55);
-  backdrop-filter: blur(24px) saturate(140%);
-  -webkit-backdrop-filter: blur(24px) saturate(140%);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.7s ease;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
-
 .blob-backdrop.is-visible {
   opacity: 1;
   pointer-events: auto;
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
 }
 
-/* The blob container — always fixed, positioned to match header */
+/* Blob anchor — empty in-flow spacer. Reserves space in the flex row.
+   JS reads its getBoundingClientRect() after the intro animation ends
+   to position the fixed blob. No position:relative needed. */
+.blob-anchor {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+}
+
+/* Blob — permanently position:fixed at body root (z-200, root stacking context).
+   opacity:0 until JS adds .is-ready (after 800ms page delay).
+   opacity is in the transition list so it fades in smoothly. */
 .blob-logo {
   position: fixed;
-  top: 1rem;
-  left: 1rem;
-  width: 96px;
-  height: 96px;
-  z-index: 150;
+  z-index: 200;
   border-radius: 50%;
-  overflow: hidden;        /* clips the WebGL canvas to the circle */
+  overflow: hidden;
   cursor: pointer;
+  opacity: 0;
   transition:
-    top            0.75s cubic-bezier(0.85, 0, 0.15, 1),
-    left           0.75s cubic-bezier(0.85, 0, 0.15, 1),
-    width          0.75s cubic-bezier(0.85, 0, 0.15, 1),
-    height         0.75s cubic-bezier(0.85, 0, 0.15, 1),
-    border-radius  0.75s cubic-bezier(0.85, 0, 0.15, 1);
+    opacity        1s ease,
+    transform      0.8s cubic-bezier(0.85, 0, 0.15, 1),
+    border-radius  0.8s cubic-bezier(0.85, 0, 0.15, 1);
 }
+.blob-logo.is-ready    { opacity: 1; }
+.blob-logo.is-expanded { cursor: default; }
 
-.blob-logo.is-expanded {
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  border-radius: 0;
-  cursor: default;
-}
-
-/* Canvas wrapper — w-full h-full relative, mirrors blobb/index.html */
+/* Canvas wrapper */
 .blob-logo__canvas {
   width: 100%;
   height: 100%;
   position: relative;
 }
+.blob-logo__canvas canvas { display: block; }
 
-/* Canvas element — Three.js controls its own pixel dimensions */
-.blob-logo__canvas canvas {
-  display: block;
-}
-
-/* JM text overlay (#blob-logo) — visible when collapsed */
+/* ── JM clipping mask overlay ──────────────────────
+   A white frosted layer covers the canvas.
+   The span uses mix-blend-mode: destination-out, which punches
+   transparent JM-shaped holes through it — revealing the live
+   canvas gradient underneath like a cut-out mask.               */
 #blob-logo {
   position: absolute;
   inset: 0;
@@ -195,23 +197,25 @@ body.site {
   justify-content: center;
   pointer-events: none;
   z-index: 10;
-  transition: opacity 0.2s ease;
   user-select: none;
+  /* White frosted overlay — destination-out text cuts through it */
+  background: rgba(255, 255, 255, 0.88);
+  isolation: isolate;   /* own compositing group for destination-out to work */
+  transition: opacity 0.35s ease;
 }
 
 #blob-logo span {
+  /* Match Contact button exactly: Bebas Neue, 17px, tight tracking */
   font-family: "Bebas Neue", sans-serif;
-  font-size: 1.1rem;
-  letter-spacing: 0.1em;
-  color: rgba(255, 255, 255, 0.90);
+  font-size: 17px;
+  letter-spacing: 0.05em;
   line-height: 1;
-  /* sit on top of the canvas — mix-blend-mode makes it read on the blob */
-  mix-blend-mode: overlay;
+  color: #000;   /* solid black required for destination-out punch-through */
+  mix-blend-mode: destination-out;
 }
 
-/* Close button (#close-blob) — hidden until expanded */
+/* ── Close button — fades in after expansion settles ── */
 #close-blob {
-  display: none;
   position: absolute;
   bottom: 2.5rem;
   left: 50%;
@@ -224,26 +228,23 @@ body.site {
   color: rgba(255, 255, 255, 0.70);
   font-family: "Alexandria", sans-serif;
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   padding: 8px 20px;
   border-radius: 999px;
   cursor: pointer;
   white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
 }
-
 #close-blob:hover { color: #fff; }
-
+/* Delayed fade-in after the expand animation settles */
 .blob-logo.is-expanded #close-blob {
-  display: block;
-}
-
-/* Header spacer — keeps flex layout balanced where blob logo was */
-.blob-logo-placeholder {
-  width: 96px;
-  height: 96px;
-  flex-shrink: 0;
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.5s ease 0.6s;
 }
 
 .brand-pill__logo {
@@ -263,7 +264,18 @@ body.site {
   box-shadow:
     0 20px 50px rgba(0, 0, 0, 0.7),
     inset 0 1px 0 rgba(255, 255, 255, 0.12);
-  backdrop-filter: var(--blur-glass);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  /* Hidden until first scroll — always starts invisible regardless of reload */
+  opacity: 0;
+  transform: translateY(-12px);
+  pointer-events: none;
+  transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+body.nav-visible .main-nav {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 .main-nav__item,
@@ -361,9 +373,8 @@ body.site {
 
 .hero-carousel {
   position: relative;
-  /* Pull up behind the nav (nav height ~60px) so it overlaps the top of the card.
-     Bottom margin matches the body's 1rem side gutters for visual consistency. */
-  margin: -3.5rem 0 var(--space-1);
+  /* Break out of site-layout's 1rem side padding so slides reach viewport edges */
+  margin: -3.5rem calc(-1 * var(--space-1)) var(--space-1);
   z-index: 1;
 }
 
@@ -373,7 +384,7 @@ body.site {
   inset: -18% -6%;
   background-size: cover;
   background-position: center;
-  filter: blur(80px) saturate(160%) brightness(0.45);
+  filter: blur(48px) saturate(150%) brightness(0.4);
   transform: scale(1.1);
   opacity: 0;
   pointer-events: none;
@@ -469,6 +480,7 @@ body.site {
   inset: 0;
   background-size: cover;
   background-position: center;
+  will-change: transform; /* Ken Burns runs 8s — own compositor layer avoids repaints */
   transition: transform 8s ease;
 }
 
@@ -770,38 +782,47 @@ body.site {
 
 /* ── Intro animation ─────────────────────────── */
 
-.site-header,
-.hero-carousel,
-.case-studies {
-  will-change: opacity, transform;
-}
-
-/* Pre-load state — invisible */
-body:not(.is-loaded) .site-header  { opacity: 0; transform: translateY(-10px); }
-body:not(.is-loaded) .hero-carousel { opacity: 0; transform: scale(0.97); }
-body:not(.is-loaded) .case-studies  { opacity: 0; transform: translateY(16px); }
-
-/* Transition in */
-body.is-loaded .site-header {
-  opacity: 1; transform: none;
-  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+/* 1. Carousel rises up — the opening act, starts immediately */
+body:not(.is-loaded) .hero-carousel {
+  opacity: 0;
+  transform: translateY(48px);
 }
 body.is-loaded .hero-carousel {
-  opacity: 1; transform: none;
-  transition: opacity 0.7s ease 0.1s, transform 0.7s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 2. Blob (via .is-ready) + Contact + menu toggle fade in at 800ms — no transform,
+   balanced left/right pop-in. */
+body:not(.is-loaded) .cta-pill,
+body:not(.is-loaded) .menu-toggle {
+  opacity: 0;
+}
+body.is-loaded .cta-pill,
+body.is-loaded .menu-toggle {
+  opacity: 1;
+  transition: opacity 1s ease 0.8s;
+}
+
+/* 3. Case studies last */
+body:not(.is-loaded) .case-studies {
+  opacity: 0;
+  transform: translateY(16px);
 }
 body.is-loaded .case-studies {
-  opacity: 1; transform: none;
-  transition: opacity 0.6s ease 0.35s, transform 0.6s ease 0.35s;
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.6s ease 1.2s, transform 0.6s ease 1.2s;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body:not(.is-loaded) .site-header,
   body:not(.is-loaded) .hero-carousel,
-  body:not(.is-loaded) .case-studies {
-    opacity: 1 !important;
-    transform: none !important;
-  }
+  body:not(.is-loaded) .cta-pill,
+  body:not(.is-loaded) .menu-toggle,
+  body:not(.is-loaded) .case-studies { opacity: 1 !important; transform: none !important; }
+  .main-nav { opacity: 1 !important; transform: none !important; pointer-events: auto !important; }
+  .blob-logo { opacity: 1 !important; }
 }
 
 

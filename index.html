@@ -17,25 +17,21 @@
 <body class="site">
   <div class="site__gradient"></div>
 
-  <!-- Blob logo — structure mirrors blobb/index.html exactly -->
-  <div id="blob-backdrop" class="blob-backdrop"></div>
+  <!-- Blob + backdrop both at body root — root stacking context.
+       z-200 blob always above z-148 backdrop, regardless of header z-index. -->
   <div id="blob-container" class="blob-logo">
     <div id="blob-canvas-wrapper" class="blob-logo__canvas">
-      <!-- Canvas injected here by Three.js -->
-      <div id="blob-logo" class="blob-logo__jm">
-        <span>JM</span>
-      </div>
-      <button id="close-blob" class="blob-logo__close">
-        <span>Close</span>
-      </button>
+      <div id="blob-logo"><span>JM</span></div>
+      <button id="close-blob"><span>Close</span></button>
     </div>
   </div>
+  <div id="blob-backdrop" class="blob-backdrop"></div>
 
   <div class="site-layout">
   <header class="site-header">
     <div class="site-header__inner">
-      <!-- 52px spacer keeps flex layout balanced where blob logo was -->
-      <div class="blob-logo-placeholder" aria-hidden="true"></div>
+      <!-- Anchor: empty, in-flow. JS reads its final rect to position the blob. -->
+      <div id="blob-anchor" class="blob-anchor" aria-hidden="true"></div>
 
       <nav class="main-nav" aria-label="Main navigation">
         <button class="main-nav__item main-nav__item--active" type="button">Home</button>
