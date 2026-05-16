@@ -113,7 +113,7 @@
 
     var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-    renderer.setSize(46, 46);
+    renderer.setSize(55, 55);
     camera.aspect = 1;
     camera.updateProjectionMatrix();
     mount.appendChild(renderer.domElement);
@@ -187,14 +187,17 @@
       }, { passive: true });
     }
 
-    /* Show nav tabs on first scroll */
-    var navShown = false;
-    window.addEventListener('scroll', function onFirstScroll() {
-      if (navShown) return;
-      navShown = true;
-      document.body.classList.add('nav-visible');
-      window.removeEventListener('scroll', onFirstScroll);
-    }, { passive: true });
+    /* Toggle nav tabs based on scroll position.
+       Hidden at the very top, visible as soon as user scrolls down at all. */
+    function updateNav() {
+      if (window.scrollY > 0) {
+        document.body.classList.add('nav-visible');
+      } else {
+        document.body.classList.remove('nav-visible');
+      }
+    }
+    window.addEventListener('scroll', updateNav, { passive: true });
+    updateNav(); /* set correct state on page load (e.g. browser scroll restore) */
 
     /* Wait for carousel.js to mark is-loaded, then reveal blob at 800ms */
     function waitForLoaded(cb) {
@@ -302,7 +305,7 @@
 
       var vw    = window.innerWidth;
       var aRect = anchor ? anchor.getBoundingClientRect()
-                         : { left: 16, top: 16, width: 46, height: 46 };
+                         : { left: 16, top: 16, width: 55, height: 55 };
       var cx2 = aRect.left + aRect.width  / 2;
       var cy2 = aRect.top  + aRect.height / 2;
 

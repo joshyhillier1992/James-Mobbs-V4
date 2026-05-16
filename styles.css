@@ -153,8 +153,8 @@ body.site {
    JS reads its getBoundingClientRect() after the intro animation ends
    to position the fixed blob. No position:relative needed. */
 .blob-anchor {
-  width: 46px;
-  height: 46px;
+  width: 55px;
+  height: 55px;
   flex-shrink: 0;
 }
 
@@ -184,11 +184,7 @@ body.site {
 }
 .blob-logo__canvas canvas { display: block; }
 
-/* ── JM clipping mask overlay ──────────────────────
-   A white frosted layer covers the canvas.
-   The span uses mix-blend-mode: destination-out, which punches
-   transparent JM-shaped holes through it — revealing the live
-   canvas gradient underneath like a cut-out mask.               */
+/* ── JM text overlay — sits directly on the canvas ── */
 #blob-logo {
   position: absolute;
   inset: 0;
@@ -198,9 +194,6 @@ body.site {
   pointer-events: none;
   z-index: 10;
   user-select: none;
-  /* White frosted overlay — destination-out text cuts through it */
-  background: rgba(255, 255, 255, 0.88);
-  isolation: isolate;   /* own compositing group for destination-out to work */
   transition: opacity 0.35s ease;
 }
 
@@ -210,8 +203,7 @@ body.site {
   font-size: 17px;
   letter-spacing: 0.05em;
   line-height: 1;
-  color: #000;   /* solid black required for destination-out punch-through */
-  mix-blend-mode: destination-out;
+  color: rgba(0, 0, 0, 0.75);
 }
 
 /* ── Close button — fades in after expansion settles ── */
