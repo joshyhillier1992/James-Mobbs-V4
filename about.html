@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>About — James Mobbs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Alexandria:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="js/three.min.js"></script>
+</head>
+<body class="site">
+  <div class="site__gradient"></div>
+
+  <div id="blob-container" class="blob-logo">
+    <div id="blob-canvas-wrapper" class="blob-logo__canvas">
+      <div id="blob-logo"><span>JM</span></div>
+      <button id="close-blob"><span>Close</span></button>
+    </div>
+  </div>
+  <div id="blob-backdrop" class="blob-backdrop"></div>
+
+  <div class="site-layout">
+
+    <header class="site-header">
+      <div class="site-header__inner">
+        <div id="blob-anchor" class="blob-anchor" aria-hidden="true"></div>
+        <nav class="main-nav" aria-label="Main navigation">
+          <a href="index.html"            class="main-nav__item">Home</a>
+          <a href="index.html#case-studies" class="main-nav__item">Case Studies</a>
+          <a href="about.html"            class="main-nav__item main-nav__item--active">About</a>
+          <button class="main-nav__search" type="button" aria-label="Search">
+            <span class="main-nav__search-icon"></span>
+          </button>
+        </nav>
+        <a href="#contact" class="cta-pill">Contact</a>
+        <button class="menu-toggle" type="button" aria-label="Open menu" id="menu-open">
+          <span></span><span></span>
+        </button>
+      </div>
+    </header>
+
+    <main class="about-page">
+
+      <!-- ── Hero ──────────────────────────────────── -->
+      <section class="about-hero">
+        <div class="about-hero__text">
+          <span class="about-hero__tag">Creative Director &amp; Motion Designer — Manchester, UK</span>
+          <h1 class="about-hero__heading">Making the<br>world <em>move</em></h1>
+          <p class="about-hero__intro">James Mobbs is a freelance creative director and motion designer with over 12 years' experience delivering show-stopping visuals for broadcast television, live music events and global brand launches.</p>
+          <div class="about-hero__actions">
+            <a href="#contact" class="cta-pill">Work With Me</a>
+            <a href="#" class="btn-ghost">Download CV</a>
+          </div>
+        </div>
+        <div class="about-hero__photo">
+          <div class="about-hero__photo-placeholder">JM</div>
+          <div class="about-hero__photo-caption">
+            <span class="about-hero__photo-name">James Mobbs</span>
+            <span class="about-hero__photo-role">Creative Director · Motion Designer</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Bio ───────────────────────────────────── -->
+      <section class="about-bio">
+        <div class="about-bio__body">
+          <p>James started his career in broadcast television, cutting his teeth on identity packages for Channel 4 and ITV before moving into the live music world. <strong>That cross-disciplinary background</strong> — one foot in the frame-perfect world of broadcast, the other in the high-stakes spontaneity of live events — is what makes his work stand apart.</p>
+          <p>Over the past decade he has become one of the UK's most trusted motion designers for the music and entertainment industry, delivering LED wall content, show packages and real-time generative visuals for artists, labels and broadcasters alike. His work has appeared on stages at Glastonbury, the BRIT Awards and arenas across Europe.</p>
+          <p>When he's not on-site with a touring production, James works from his studio in Manchester, collaborating remotely with production companies, creative agencies and brands who need cinematic motion work delivered to broadcast standards and tight deadlines.</p>
+          <p><strong>The work is always personal.</strong> James doesn't outsource, doesn't have a team of juniors doing the heavy lifting — every project is crafted by him, start to finish. That means clients get direct access to the person with the ideas, not an account manager who passes notes down a chain.</p>
+        </div>
+        <aside class="about-bio__sidebar">
+          <div class="sidebar-card">
+            <span class="sidebar-card__label">Based in</span>
+            <ul class="sidebar-card__list">
+              <li>Manchester, United Kingdom</li>
+              <li>Available worldwide</li>
+            </ul>
+          </div>
+          <div class="sidebar-card">
+            <span class="sidebar-card__label">Specialisms</span>
+            <ul class="sidebar-card__list">
+              <li>Live event visuals</li>
+              <li>Broadcast motion graphics</li>
+              <li>Real-time / generative content</li>
+              <li>Brand identity films</li>
+              <li>Show packages</li>
+            </ul>
+          </div>
+          <div class="sidebar-card">
+            <span class="sidebar-card__label">Software</span>
+            <ul class="sidebar-card__list">
+              <li>After Effects &amp; Cinema 4D</li>
+              <li>TouchDesigner</li>
+              <li>Premiere Pro &amp; Resolve</li>
+              <li>Notch</li>
+            </ul>
+          </div>
+        </aside>
+      </section>
+
+      <!-- ── Services ──────────────────────────────── -->
+      <section class="about-services" id="services">
+        <p class="section-title">What I Do</p>
+        <div class="about-services__grid">
+
+          <div class="service-card">
+            <div class="service-card__icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+              </svg>
+            </div>
+            <h3 class="service-card__title">Broadcast Motion</h3>
+            <p class="service-card__desc">Channel idents, title sequences, lower thirds and full broadcast design packages — built to spec and delivered broadcast-ready.</p>
+          </div>
+
+          <div class="service-card">
+            <div class="service-card__icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+              </svg>
+            </div>
+            <h3 class="service-card__title">Live Show Packages</h3>
+            <p class="service-card__desc">End-to-end content production for live music events — LED wall content, stage idents, countdowns, intros and real-time playback systems.</p>
+          </div>
+
+          <div class="service-card">
+            <div class="service-card__icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+              </svg>
+            </div>
+            <h3 class="service-card__title">Real-Time Visuals</h3>
+            <p class="service-card__desc">Generative and reactive content using TouchDesigner and Notch — visuals that respond to audio, MIDI or live inputs in real time.</p>
+          </div>
+
+          <div class="service-card">
+            <div class="service-card__icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
+              </svg>
+            </div>
+            <h3 class="service-card__title">Brand Launch Films</h3>
+            <p class="service-card__desc">Cinematic reveal films and launch content that make the first impression count — from concept through to final delivery.</p>
+          </div>
+
+          <div class="service-card">
+            <div class="service-card__icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 10l4.553-2.069A1 1 0 0121 8.845v6.31a1 1 0 01-1.447.894L15 14"/><rect x="3" y="8" width="12" height="8" rx="2"/>
+              </svg>
+            </div>
+            <h3 class="service-card__title">Event Screen Content</h3>
+            <p class="service-card__desc">On-site screen design and content production for conferences, activations and award ceremonies — including same-day delivery.</p>
+          </div>
+
+          <div class="service-card">
+            <div class="service-card__icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+              </svg>
+            </div>
+            <h3 class="service-card__title">Creative Direction</h3>
+            <p class="service-card__desc">Big-picture thinking alongside the craft — helping productions define their visual language before a single frame is made.</p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ── Process ───────────────────────────────── -->
+      <section class="about-process" id="process">
+        <p class="section-title">How I Work</p>
+        <div class="process-steps">
+          <div class="process-step">
+            <span class="process-step__number">01</span>
+            <h3 class="process-step__title">Discover</h3>
+            <p class="process-step__desc">A deep-dive into your brief, brand and audience. No templates — every project starts with questions.</p>
+          </div>
+          <div class="process-step">
+            <span class="process-step__number">02</span>
+            <h3 class="process-step__title">Concept</h3>
+            <p class="process-step__desc">Visual concepts presented as storyboards, style frames or lo-fi tests — so you see the idea before committing to production.</p>
+          </div>
+          <div class="process-step">
+            <span class="process-step__number">03</span>
+            <h3 class="process-step__title">Build</h3>
+            <p class="process-step__desc">Production in After Effects, Cinema 4D or TouchDesigner, with regular check-ins and draft previews throughout.</p>
+          </div>
+          <div class="process-step">
+            <span class="process-step__number">04</span>
+            <h3 class="process-step__title">Deliver</h3>
+            <p class="process-step__desc">Files exported to your exact spec — broadcast-safe, properly labelled and on time. On-site support available for live events.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Clients ───────────────────────────────── -->
+      <section class="about-clients" id="clients">
+        <p class="section-title">Clients &amp; Collaborators</p>
+        <div class="about-clients__strip">
+          <span class="client-pill">Hits Radio</span>
+          <span class="client-pill">BBC</span>
+          <span class="client-pill">Channel 4</span>
+          <span class="client-pill">ITV</span>
+          <span class="client-pill">BRITs</span>
+          <span class="client-pill">Glastonbury Festival</span>
+          <span class="client-pill">Nike</span>
+          <span class="client-pill">Bauer Media</span>
+          <span class="client-pill">Global Radio</span>
+          <span class="client-pill">Universal Music</span>
+          <span class="client-pill">Sony Music</span>
+          <span class="client-pill">Live Nation</span>
+          <span class="client-pill">AEG Presents</span>
+          <span class="client-pill">Adidas</span>
+          <span class="client-pill">Red Bull</span>
+          <span class="client-pill">Manchester City FC</span>
+        </div>
+      </section>
+
+      <!-- ── Awards ────────────────────────────────── -->
+      <section class="about-awards" id="awards">
+        <p class="section-title">Awards &amp; Recognition</p>
+        <div class="awards-list">
+
+          <div class="award-item">
+            <span class="award-item__year">2024</span>
+            <div class="award-item__info">
+              <p class="award-item__name">D&amp;AD Wood Pencil</p>
+              <p class="award-item__category">Motion Graphics — Live Events</p>
+            </div>
+            <span class="award-badge award-badge--gold">Winner</span>
+          </div>
+
+          <div class="award-item">
+            <span class="award-item__year">2024</span>
+            <div class="award-item__info">
+              <p class="award-item__name">BIMA Award — Best Moving Image</p>
+              <p class="award-item__category">Broadcast &amp; Moving Image</p>
+            </div>
+            <span class="award-badge award-badge--silver">Shortlist</span>
+          </div>
+
+          <div class="award-item">
+            <span class="award-item__year">2023</span>
+            <div class="award-item__info">
+              <p class="award-item__name">Creative Circle — Gold</p>
+              <p class="award-item__category">Motion Design — Brand</p>
+            </div>
+            <span class="award-badge award-badge--gold">Gold</span>
+          </div>
+
+          <div class="award-item">
+            <span class="award-item__year">2023</span>
+            <div class="award-item__info">
+              <p class="award-item__name">Broadcast Design Awards</p>
+              <p class="award-item__category">Best Title Sequence</p>
+            </div>
+            <span class="award-badge award-badge--silver">Silver</span>
+          </div>
+
+          <div class="award-item">
+            <span class="award-item__year">2022</span>
+            <div class="award-item__info">
+              <p class="award-item__name">Transform Awards Europe</p>
+              <p class="award-item__category">Best Brand Experience</p>
+            </div>
+            <span class="award-badge award-badge--shortlist">Shortlist</span>
+          </div>
+
+          <div class="award-item">
+            <span class="award-item__year">2021</span>
+            <div class="award-item__info">
+              <p class="award-item__name">Promax UK — Best Ident</p>
+              <p class="award-item__category">Channel Branding</p>
+            </div>
+            <span class="award-badge award-badge--gold">Gold</span>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ── Contact CTA ───────────────────────────── -->
+      <section class="about-cta" id="contact">
+        <div class="about-cta__text">
+          <h2 class="about-cta__heading">Let's make something great</h2>
+          <p class="about-cta__sub">Available for freelance projects worldwide. Whether you need a show package, broadcast idents or a brand film — get in touch and let's talk through your project.</p>
+        </div>
+        <div class="about-cta__actions">
+          <a href="mailto:hello@jamesmobbs.com" class="cta-pill">Send a Message</a>
+          <a href="mailto:hello@jamesmobbs.com" class="contact-email" style="color:rgba(255,255,255,0.5);font-size:0.88rem;">hello@jamesmobbs.com</a>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ── Footer ──────────────────────────────────── -->
+    <footer class="site-footer">
+      <div class="site-footer__grid">
+        <div class="site-footer__brand">
+          <a href="index.html" class="brand-pill brand-pill--footer">
+            <img src="img/jm-logo.svg" alt="James Mobbs" class="brand-pill__logo"/>
+          </a>
+          <p class="site-footer__tagline">Creative direction, motion design and experience design for music, culture and global brands.</p>
+          <p class="site-footer__copy">© 2026 James Mobbs. All rights reserved.</p>
+        </div>
+        <div class="site-footer__cols">
+          <div>
+            <p class="site-footer__col-label">Work</p>
+            <ul class="site-footer__col-links">
+              <li><a href="index.html#case-studies" class="site-footer__link">Case Studies</a></li>
+              <li><a href="#" class="site-footer__link">Live Visuals</a></li>
+              <li><a href="#" class="site-footer__link">Broadcast</a></li>
+              <li><a href="#" class="site-footer__link">Brand Launches</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="site-footer__col-label">Studio</p>
+            <ul class="site-footer__col-links">
+              <li><a href="about.html" class="site-footer__link">About</a></li>
+              <li><a href="about.html#process" class="site-footer__link">Process</a></li>
+              <li><a href="about.html#clients" class="site-footer__link">Clients</a></li>
+              <li><a href="about.html#awards" class="site-footer__link">Awards</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="site-footer__col-label">Connect</p>
+            <ul class="site-footer__col-links">
+              <li><a href="#contact" class="site-footer__link">Contact</a></li>
+              <li><a href="#" class="site-footer__link">Press Kit</a></li>
+              <li><a href="#" class="site-footer__link">Newsletter</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="site-footer__col-label">Social</p>
+            <ul class="site-footer__col-links">
+              <li><a href="#" class="site-footer__link">Instagram</a></li>
+              <li><a href="#" class="site-footer__link">LinkedIn</a></li>
+              <li><a href="#" class="site-footer__link">Vimeo</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="site-footer__bottom">
+        <p class="site-footer__copy">Crafted with care in Manchester, UK</p>
+        <div class="site-footer__legal">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms</a>
+        </div>
+      </div>
+    </footer>
+
+  </div><!-- /site-layout -->
+
+  <!-- Mobile Nav Drawer -->
+  <nav class="nav-drawer" id="nav-drawer" aria-label="Mobile navigation" aria-hidden="true">
+    <div class="nav-drawer__top">
+      <a href="index.html" class="brand-pill brand-pill--footer">
+        <img src="img/jm-logo.svg" alt="James Mobbs" class="brand-pill__logo"/>
+      </a>
+      <button class="nav-drawer__close" id="menu-close" aria-label="Close menu">✕</button>
+    </div>
+    <div class="nav-drawer__links">
+      <a href="index.html"              class="nav-drawer__link">Home</a>
+      <a href="index.html#case-studies" class="nav-drawer__link">Work</a>
+      <a href="about.html"              class="nav-drawer__link is-active">About</a>
+      <a href="#contact"                class="nav-drawer__link">Contact</a>
+    </div>
+    <div class="nav-drawer__bottom">
+      <a href="#contact" class="cta-pill">Get in Touch</a>
+      <div class="nav-drawer__social">
+        <a href="#" class="nav-drawer__social-link">Instagram</a>
+        <a href="#" class="nav-drawer__social-link">Vimeo</a>
+        <a href="#" class="nav-drawer__social-link">LinkedIn</a>
+      </div>
+    </div>
+  </nav>
+
+  <script src="js/blob.js" defer></script>
+  <script src="js/nav.js" defer></script>
+
+</body>
+</html>
