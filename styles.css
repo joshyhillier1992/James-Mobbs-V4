@@ -421,6 +421,7 @@ body.nav-visible .main-nav {
 .carousel__slide {
   flex: 0 0 85%;
   min-width: 0;
+  position: relative;
   transition: opacity 1s ease, transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   transform-origin: center center;
 }
@@ -820,13 +821,13 @@ body.is-loaded .case-studies {
 
 /* ── Frame edge-sweep timer ──────────────────── */
 
-/* SVG sits exactly on top of the frame, pointer-events off */
+/* SVG sits outside carousel__frame (which has overflow:hidden) so the
+   stroke is never clipped at the rounded corners */
 .carousel__sweep {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  border-radius: inherit;
   pointer-events: none;
   z-index: 3;
   overflow: visible;

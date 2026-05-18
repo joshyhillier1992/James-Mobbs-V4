@@ -99,16 +99,17 @@
   let sweepCCW     = null;   // counter-CW (bottom-centre → left  → top-centre)
 
   function getSweepEls() {
-    const activeFrame = track.querySelector('.carousel__slide.is-active .carousel__frame');
-    if (!activeFrame) return false;
-    sweepCW  = activeFrame.querySelector('.carousel__sweep-cw');
-    sweepCCW = activeFrame.querySelector('.carousel__sweep-ccw');
+    const activeSlide = track.querySelector('.carousel__slide.is-active');
+    if (!activeSlide) return false;
+    sweepCW  = activeSlide.querySelector('.carousel__sweep-cw');
+    sweepCCW = activeSlide.querySelector('.carousel__sweep-ccw');
     return !!(sweepCW && sweepCCW);
   }
 
   function setSweepGeometry() {
     if (!getSweepEls()) return;
-    const frame = sweepCW.closest('.carousel__frame');
+    const activeSlide = track.querySelector('.carousel__slide.is-active');
+    const frame = activeSlide.querySelector('.carousel__frame');
     const W = frame.offsetWidth;
     const H = frame.offsetHeight;
     const r = 23; // matches CSS --radius-card
@@ -197,6 +198,22 @@
   viewport.addEventListener('touchstart', (e) => onDragStart(e.touches[0].clientX), { passive: true });
   viewport.addEventListener('touchmove',  (e) => onDragMove(e.touches[0].clientX),  { passive: true });
   viewport.addEventListener('touchend',   ()  => onDragEnd());
+
+  /* Trackpad two-finger horizontal swipe */
+  let wheelAccum  = 0;
+  let wheelCooldown = false;
+  viewport.addEventListener('wheel', (e) => {
+    if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+    e.preventDefault();
+    if (wheelCooldown) return;
+    wheelAccum += e.deltaX;
+    if (Math.abs(wheelAccum) >= DRAG_THRESHOLD) {
+      wheelCooldown = true;
+      wheelAccum > 0 ? goTo(domCurrent + 1) : goTo(domCurrent - 1);
+      wheelAccum = 0;
+      setTimeout(() => { wheelCooldown = false; }, 600);
+    }
+  }, { passive: false });
 
   /* Hover pause */
   /* Hover does NOT pause the timer — timing is independent of hover state */
