@@ -34,9 +34,9 @@
       <div id="blob-anchor" class="blob-anchor" aria-hidden="true"></div>
 
       <nav class="main-nav" aria-label="Main navigation">
-        <button class="main-nav__item main-nav__item--active" type="button">Home</button>
-        <button class="main-nav__item" type="button">Case Studies</button>
-        <button class="main-nav__item" type="button">About</button>
+        <a href="index.html" class="main-nav__item main-nav__item--active">Home</a>
+        <a href="#case-studies" class="main-nav__item">Case Studies</a>
+        <a href="about.html" class="main-nav__item">About</a>
         <button class="main-nav__search" type="button" aria-label="Search">
           <span class="main-nav__search-icon"></span>
         </button>
@@ -44,7 +44,7 @@
 
       <a href="#contact" class="cta-pill">Contact</a>
 
-      <button class="menu-toggle" type="button" aria-label="Open menu">
+      <button class="menu-toggle" type="button" aria-label="Open menu" id="menu-open">
         <span></span><span></span>
       </button>
     </div>
@@ -63,9 +63,9 @@
 
           <!-- Slide 1 · Hits Radio -->
           <article class="carousel__slide is-active" data-index="0">
+            <svg class="carousel__sweep" aria-hidden="true"><path class="carousel__sweep-cw"/><path class="carousel__sweep-ccw"/></svg>
             <div class="carousel__frame">
               <div class="carousel__media carousel__media--hits"></div>
-              <svg class="carousel__sweep" aria-hidden="true"><path class="carousel__sweep-cw"/><path class="carousel__sweep-ccw"/></svg>
               <div class="carousel__media-fade"></div>
               <footer class="carousel__info">
                 <div class="carousel__info-top">
@@ -87,9 +87,9 @@
 
           <!-- Slide 2 · Summer Festival -->
           <article class="carousel__slide" data-index="1">
+            <svg class="carousel__sweep" aria-hidden="true"><path class="carousel__sweep-cw"/><path class="carousel__sweep-ccw"/></svg>
             <div class="carousel__frame">
               <div class="carousel__media carousel__media--festival"></div>
-              <svg class="carousel__sweep" aria-hidden="true"><path class="carousel__sweep-cw"/><path class="carousel__sweep-ccw"/></svg>
               <div class="carousel__media-fade"></div>
               <footer class="carousel__info">
                 <div class="carousel__info-top">
@@ -106,9 +106,9 @@
 
           <!-- Slide 3 · Global Brand -->
           <article class="carousel__slide" data-index="2">
+            <svg class="carousel__sweep" aria-hidden="true"><path class="carousel__sweep-cw"/><path class="carousel__sweep-ccw"/></svg>
             <div class="carousel__frame">
               <div class="carousel__media carousel__media--brand"></div>
-              <svg class="carousel__sweep" aria-hidden="true"><path class="carousel__sweep-cw"/><path class="carousel__sweep-ccw"/></svg>
               <div class="carousel__media-fade"></div>
               <footer class="carousel__info">
                 <div class="carousel__info-top">
@@ -128,6 +128,134 @@
 
     </section>
     <!-- /hero-carousel -->
+
+    <!-- ── Case Studies ──────────────────────────────── -->
+    <section class="case-studies" id="case-studies" aria-labelledby="cs-heading">
+      <div class="case-studies__header">
+        <div>
+          <p class="section-title" id="cs-heading">Case Studies</p>
+          <p class="case-studies__subtitle">Featured work across live events, broadcast and global brand launches.</p>
+        </div>
+        <a href="#" class="btn-ghost">View All Work</a>
+      </div>
+
+      <div class="case-studies__grid">
+
+        <!-- Wide card -->
+        <article class="case-card case-card--wide">
+          <div class="case-card__media case-card__media--hits" style="height:260px; background-size:cover;background-position:center;"></div>
+          <div class="case-card__content">
+            <p class="case-card__overline">Live Visuals · 2024</p>
+            <h3 class="case-card__title">Hits Radio — An Immersive Experience</h3>
+            <p class="case-card__meta">LED wall content, full show package and real-time performance graphics for the Hits Radio Relaunch Tour across the UK.</p>
+          </div>
+        </article>
+
+        <article class="case-card">
+          <div class="case-card__media case-card__media--festival"></div>
+          <div class="case-card__content">
+            <p class="case-card__overline">Stage Identity · 2024</p>
+            <h3 class="case-card__title">Light, Smoke & Screens</h3>
+            <p class="case-card__meta">Full show package for a sold-out summer festival.</p>
+          </div>
+        </article>
+
+        <article class="case-card">
+          <div class="case-card__media case-card__media--brand"></div>
+          <div class="case-card__content">
+            <p class="case-card__overline">Brand Launch · 2023</p>
+            <h3 class="case-card__title">Designing the Opening Moment</h3>
+            <p class="case-card__meta">Cinematic opening sequence for a global brand launch event.</p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ── More Projects (horizontal scroll) ────────── -->
+    <section class="projects" aria-label="More projects">
+      <div class="projects__header">
+        <p class="section-title">More Work</p>
+        <a href="#" class="projects__see-all">See all →</a>
+      </div>
+      <div class="projects__strip">
+
+        <a href="project.html" class="project-card" style="text-decoration:none;color:inherit;">
+          <div class="project-card__thumb project-card__thumb--a"></div>
+          <div class="project-card__body">
+            <span class="project-card__type">Broadcast Idents</span>
+            <h3 class="project-card__title">Channel 4 — Identity</h3>
+          </div>
+        </a>
+
+        <a href="project.html" class="project-card" style="text-decoration:none;color:inherit;">
+          <div class="project-card__thumb project-card__thumb--b"></div>
+          <div class="project-card__body">
+            <span class="project-card__type">Live Event</span>
+            <h3 class="project-card__title">BBC Proms 2023</h3>
+          </div>
+        </a>
+
+        <a href="project.html" class="project-card" style="text-decoration:none;color:inherit;">
+          <div class="project-card__thumb project-card__thumb--c"></div>
+          <div class="project-card__body">
+            <span class="project-card__type">Brand Film</span>
+            <h3 class="project-card__title">Nike — Just Do It</h3>
+          </div>
+        </a>
+
+        <a href="project.html" class="project-card" style="text-decoration:none;color:inherit;">
+          <div class="project-card__thumb project-card__thumb--d"></div>
+          <div class="project-card__body">
+            <span class="project-card__type">Awards Show</span>
+            <h3 class="project-card__title">BRIT Awards 2024</h3>
+          </div>
+        </a>
+
+        <a href="project.html" class="project-card" style="text-decoration:none;color:inherit;">
+          <div class="project-card__thumb project-card__thumb--a" style="background:linear-gradient(135deg,#0a2020,#4cf5ff80);"></div>
+          <div class="project-card__body">
+            <span class="project-card__type">Stage Design</span>
+            <h3 class="project-card__title">Glastonbury — Pyramid Stage</h3>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- ── Stats ─────────────────────────────────────── -->
+    <div class="stats-bar" aria-label="Studio at a glance">
+      <div class="stat">
+        <span class="stat__number">12+</span>
+        <span class="stat__label">Years Experience</span>
+      </div>
+      <div class="stat">
+        <span class="stat__number">200+</span>
+        <span class="stat__label">Projects Delivered</span>
+      </div>
+      <div class="stat">
+        <span class="stat__number">40+</span>
+        <span class="stat__label">Global Clients</span>
+      </div>
+      <div class="stat">
+        <span class="stat__number">8</span>
+        <span class="stat__label">Industry Awards</span>
+      </div>
+    </div>
+
+    <!-- ── Contact ────────────────────────────────────── -->
+    <section class="contact-section" id="contact" aria-label="Get in touch">
+      <div class="contact-section__text">
+        <span class="contact-section__label">Let's Work Together</span>
+        <h2 class="contact-section__heading">Got a project in mind?</h2>
+        <p class="contact-section__sub">Whether it's a live show, broadcast package or brand launch — James is available for freelance projects worldwide. Get in touch to discuss your next production.</p>
+      </div>
+      <div class="contact-section__actions">
+        <a href="mailto:hello@jamesmobbs.com" class="cta-pill">Send a Message</a>
+        <a href="mailto:hello@jamesmobbs.com" class="contact-email">hello@jamesmobbs.com</a>
+      </div>
+    </section>
+
   </main>
 
   <!-- ── Footer ────────────────────────────────────── -->
@@ -221,8 +349,33 @@
 
   </div><!-- /site-layout -->
 
+  <!-- ── Mobile Nav Drawer ─────────────────────────── -->
+  <nav class="nav-drawer" id="nav-drawer" aria-label="Mobile navigation" aria-hidden="true">
+    <div class="nav-drawer__top">
+      <a href="index.html" class="brand-pill brand-pill--footer">
+        <img src="img/jm-logo.svg" alt="James Mobbs" class="brand-pill__logo"/>
+      </a>
+      <button class="nav-drawer__close" id="menu-close" aria-label="Close menu">✕</button>
+    </div>
+    <div class="nav-drawer__links">
+      <a href="index.html"   class="nav-drawer__link is-active">Home</a>
+      <a href="#case-studies" class="nav-drawer__link">Work</a>
+      <a href="about.html"   class="nav-drawer__link">About</a>
+      <a href="#contact"     class="nav-drawer__link">Contact</a>
+    </div>
+    <div class="nav-drawer__bottom">
+      <a href="#contact" class="cta-pill">Get in Touch</a>
+      <div class="nav-drawer__social">
+        <a href="#" class="nav-drawer__social-link">Instagram</a>
+        <a href="#" class="nav-drawer__social-link">Vimeo</a>
+        <a href="#" class="nav-drawer__social-link">LinkedIn</a>
+      </div>
+    </div>
+  </nav>
+
   <script src="js/carousel.js" defer></script>
   <script src="js/blob.js" defer></script>
+  <script src="js/nav.js" defer></script>
 
 </body>
 </html>

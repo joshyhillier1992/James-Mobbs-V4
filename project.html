@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hits Radio — James Mobbs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Alexandria:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- ═══════════════════════════════════════════════
+       PROJECT COLOUR CONFIG
+       ─────────────────────────────────────────────
+       In WordPress: set these two values via ACF
+       colour-picker fields. Everything on this page
+       inherits from --project-primary and
+       --project-accent automatically.
+
+       primary  = dominant brand colour
+       accent   = highlight / glow colour
+  ═══════════════════════════════════════════════ -->
+  <style>
+    :root {
+      --project-primary: #ff7b2c;   /* ← change me */
+      --project-accent:  #ff2c7b;   /* ← change me */
+    }
+  </style>
+
+  <script src="js/three.min.js"></script>
+</head>
+<body class="site">
+  <div class="site__gradient"></div>
+
+  <div id="blob-container" class="blob-logo">
+    <div id="blob-canvas-wrapper" class="blob-logo__canvas">
+      <div id="blob-logo"><span>JM</span></div>
+      <button id="close-blob"><span>Close</span></button>
+    </div>
+  </div>
+  <div id="blob-backdrop" class="blob-backdrop"></div>
+
+  <div class="site-layout">
+
+    <header class="site-header">
+      <div class="site-header__inner">
+        <div id="blob-anchor" class="blob-anchor" aria-hidden="true"></div>
+        <nav class="main-nav" aria-label="Main navigation">
+          <a href="index.html"   class="main-nav__item">Home</a>
+          <a href="index.html#case-studies" class="main-nav__item main-nav__item--active">Case Studies</a>
+          <a href="about.html"   class="main-nav__item">About</a>
+          <button class="main-nav__search" type="button" aria-label="Search">
+            <span class="main-nav__search-icon"></span>
+          </button>
+        </nav>
+        <a href="#contact" class="cta-pill">Contact</a>
+        <button class="menu-toggle" type="button" aria-label="Open menu" id="menu-open">
+          <span></span><span></span>
+        </button>
+      </div>
+    </header>
+
+    <main class="project-page">
+
+      <!-- ═══════════════════════════════════════════
+           BLOCK 1 · HERO
+           WordPress fields: title, tags[], client,
+           year, role, duration
+      ═══════════════════════════════════════════ -->
+      <section class="block block--hero">
+        <a href="index.html" class="project-hero__back">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 12L6 8l4-4"/></svg>
+          All Work
+        </a>
+
+        <div class="project-hero__tags">
+          <span class="project-hero__tag project-hero__tag--primary">Live Visuals</span>
+          <span class="project-hero__tag">Show Package</span>
+          <span class="project-hero__tag">Broadcast</span>
+        </div>
+
+        <h1 class="project-hero__title">Hits Radio<br>Immersive Experience</h1>
+
+        <div class="project-hero__meta">
+          <span class="project-hero__meta-item"><strong>Client</strong> Hits Radio / Bauer Media</span>
+          <span class="project-hero__meta-sep"></span>
+          <span class="project-hero__meta-item"><strong>Year</strong> 2024</span>
+          <span class="project-hero__meta-sep"></span>
+          <span class="project-hero__meta-item"><strong>Role</strong> Creative Director &amp; Motion Designer</span>
+          <span class="project-hero__meta-sep"></span>
+          <span class="project-hero__meta-item"><strong>Duration</strong> 6 weeks</span>
+        </div>
+      </section>
+
+
+      <!-- ═══════════════════════════════════════════
+           BLOCK 2 · MEDIA CAROUSEL
+           Reuses existing carousel JS.
+           WordPress: add/remove slide articles,
+           swap background-image URLs.
+      ═══════════════════════════════════════════ -->
+      <section class="block block--carousel">
+        <div class="hero-carousel" aria-label="Project images">
+          <div class="carousel__ambient" id="js-ambient"></div>
+          <div class="carousel__viewport">
+            <div class="carousel__track" id="js-track">
+
+              <article class="carousel__slide is-active" data-index="0">
+                <svg class="carousel__sweep" aria-hidden="true"><path class="carousel__sweep-cw"/><path class="carousel__sweep-ccw"/></svg>
+                <div class="carousel__frame">
+                  <div class="carousel__media carousel__media--hits"></div>
+                  <div class="carousel__media-fade"></div>
+                </div>
+              </article>
+
+              <article class="carousel__slide" data-index="1">
+                <svg class="carousel__sweep" aria-hidden="true"><path class="carousel__sweep-cw"/><path class="carousel__sweep-ccw"/></svg>
+                <div class="carousel__frame">
+                  <div class="carousel__media carousel__media--festival"></div>
+                  <div class="carousel__media-fade"></div>
+                </div>
+              </article>
+
+              <article class="carousel__slide" data-index="2">
+                <svg class="carousel__sweep" aria-hidden="true"><path class="carousel__sweep-cw"/><path class="carousel__sweep-ccw"/></svg>
+                <div class="carousel__frame">
+                  <div class="carousel__media carousel__media--brand"></div>
+                  <div class="carousel__media-fade"></div>
+                </div>
+              </article>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ═══════════════════════════════════════════
+           BLOCK 3 · TEXT / PROSE
+           WordPress fields: heading, body (WYSIWYG)
+      ═══════════════════════════════════════════ -->
+      <section class="block block--text">
+        <span class="block__accent"></span>
+        <h2 class="block__heading">The Brief</h2>
+        <div class="block__body">
+          <p>Hits Radio had just completed a bold visual rebrand and needed a full live show package to match. The brief was simple: <strong>make the audience feel the music before a note is played.</strong> Every screen, every transition, every ident had to pulse with the station's new energy.</p>
+          <p>Working directly with the Bauer Media creative team, James developed a system of generative visuals that could react to the live music in real time — ensuring no two performances ever looked identical, while maintaining a coherent visual language across all screens.</p>
+          <p>The package shipped across seven UK arena dates, with content delivered for LED walls spanning over 400 square metres per venue.</p>
+        </div>
+      </section>
+
+
+      <!-- ═══════════════════════════════════════════
+           BLOCK 4 · SPLIT (50 / 50)
+           Add class "is-reversed" to flip image right.
+           WordPress fields: heading, body, image URL,
+           reversed (toggle)
+      ═══════════════════════════════════════════ -->
+      <section class="block block--split">
+        <div class="split__media carousel__media--hits" style="background-image:url('img/hero-placeholder.png');"></div>
+        <div class="split__content">
+          <div class="split__accent"></div>
+          <h2 class="split__heading">Motion at Scale</h2>
+          <p class="split__body">The visual system was built in After Effects and TouchDesigner, allowing real-time parameter control from the FOH position. Each scene could shift hue, tempo and density in sync with the DJ set — making the LED walls a live instrument in their own right.</p>
+          <p class="split__body" style="margin-top:1rem;">Outputs included 4K loops, real-time MIDI-triggered content and a complete broadcast-safe version for television.</p>
+        </div>
+      </section>
+
+      <!-- Reversed variant -->
+      <section class="block block--split is-reversed">
+        <div class="split__media carousel__media--festival" style="background-image:url('img/slide-festival.jpg');"></div>
+        <div class="split__content">
+          <div class="split__accent"></div>
+          <h2 class="split__heading">On the Night</h2>
+          <p class="split__body">From load-in to doors open, James was on-site at every show, running content playback and handling last-minute creative changes in real time. The system was designed to fail gracefully — with hot-swappable backup clips for every scene.</p>
+        </div>
+      </section>
+
+
+      <!-- ═══════════════════════════════════════════
+           BLOCK 5 · GALLERY
+           Switch between gallery-grid--2col and
+           gallery-grid--3col. Add gallery-item--wide
+           or gallery-item--tall modifiers as needed.
+           WordPress: repeater of image URLs
+      ═══════════════════════════════════════════ -->
+      <section class="block block--gallery">
+        <p class="block__label">Gallery</p>
+        <div class="gallery-grid gallery-grid--3col">
+          <div class="gallery-item gallery-item--a"></div>
+          <div class="gallery-item gallery-item--b"></div>
+          <div class="gallery-item gallery-item--c"></div>
+          <div class="gallery-item gallery-item--wide gallery-item--a" style="opacity:0.7;"></div>
+          <div class="gallery-item gallery-item--d"></div>
+          <div class="gallery-item gallery-item--e"></div>
+        </div>
+      </section>
+
+
+      <!-- ═══════════════════════════════════════════
+           BLOCK 6 · STATS
+           WordPress fields: repeater of number + label
+           (max 3–4 for best layout)
+      ═══════════════════════════════════════════ -->
+      <div class="block block--stats-row">
+        <div class="stat">
+          <span class="stat__number">7</span>
+          <span class="stat__label">Arena Dates</span>
+        </div>
+        <div class="stat">
+          <span class="stat__number">400m²</span>
+          <span class="stat__label">LED Wall Per Venue</span>
+        </div>
+        <div class="stat">
+          <span class="stat__number">60fps</span>
+          <span class="stat__label">Real-Time Output</span>
+        </div>
+      </div>
+
+
+      <!-- ═══════════════════════════════════════════
+           BLOCK 7 · TESTIMONIAL
+           WordPress fields: quote, name, role,
+           avatar initials (2 chars)
+      ═══════════════════════════════════════════ -->
+      <section class="block block--testimonial">
+        <blockquote>
+          <p class="testimonial__quote">"James brought our rebrand to life in a way we couldn't have imagined. The visuals were extraordinary — every show felt completely unique."</p>
+          <cite class="testimonial__cite">
+            <div class="testimonial__avatar">SC</div>
+            <div>
+              <p class="testimonial__name">Sarah Collins</p>
+              <p class="testimonial__role">Head of Brand, Hits Radio / Bauer Media</p>
+            </div>
+          </cite>
+        </blockquote>
+      </section>
+
+
+      <!-- ═══════════════════════════════════════════
+           BLOCK 8 · VIDEO
+           Replace .video-placeholder with an
+           <iframe> or <video> tag in WordPress.
+           WordPress fields: vimeo/youtube URL or
+           file upload, caption
+      ═══════════════════════════════════════════ -->
+      <section class="block block--video">
+        <p class="block__label">Behind the Scenes</p>
+        <div class="video-wrap">
+          <!-- Replace this div with your iframe/video in WordPress -->
+          <div class="video-placeholder">
+            <button class="video-play-btn" aria-label="Play video">
+              <svg width="24" height="24" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+            </button>
+            <span class="video-caption">Making Of — Hits Radio Live 2024</span>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ═══════════════════════════════════════════
+           BLOCK 9 · CREDITS
+           WordPress fields: repeater of role + name
+      ═══════════════════════════════════════════ -->
+      <section class="block block--credits">
+        <p class="block__label">Credits</p>
+        <div class="credits-grid">
+          <div class="credit-item">
+            <span class="credit-item__role">Creative Director</span>
+            <p class="credit-item__name">James Mobbs</p>
+          </div>
+          <div class="credit-item">
+            <span class="credit-item__role">Motion Designer</span>
+            <p class="credit-item__name">James Mobbs</p>
+          </div>
+          <div class="credit-item">
+            <span class="credit-item__role">Technical Director</span>
+            <p class="credit-item__name">Tom Hartley</p>
+          </div>
+          <div class="credit-item">
+            <span class="credit-item__role">Producer</span>
+            <p class="credit-item__name">Emma Wade</p>
+          </div>
+          <div class="credit-item">
+            <span class="credit-item__role">Lighting Designer</span>
+            <p class="credit-item__name">Dan Forsythe</p>
+          </div>
+          <div class="credit-item">
+            <span class="credit-item__role">Client</span>
+            <p class="credit-item__name">Bauer Media / Hits Radio</p>
+          </div>
+          <div class="credit-item">
+            <span class="credit-item__role">Software</span>
+            <p class="credit-item__name">TouchDesigner, After Effects</p>
+          </div>
+          <div class="credit-item">
+            <span class="credit-item__role">Photographer</span>
+            <p class="credit-item__name">Rachel Moore</p>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ═══════════════════════════════════════════
+           BLOCK 10 · RELATED PROJECTS
+           WordPress fields: repeater of project links
+           (pull from CPT query or manual selection)
+      ═══════════════════════════════════════════ -->
+      <section class="block block--related">
+        <p class="block__label">More Work</p>
+        <div class="related-grid">
+          <a href="project.html" class="related-card">
+            <div class="related-card__thumb related-card__thumb--a"></div>
+            <div class="related-card__body">
+              <span class="related-card__type">Stage Identity</span>
+              <h3 class="related-card__title">Light, Smoke & Screens</h3>
+            </div>
+          </a>
+          <a href="project.html" class="related-card">
+            <div class="related-card__thumb related-card__thumb--b"></div>
+            <div class="related-card__body">
+              <span class="related-card__type">Brand Launch</span>
+              <h3 class="related-card__title">Opening Moment</h3>
+            </div>
+          </a>
+          <a href="project.html" class="related-card">
+            <div class="related-card__thumb related-card__thumb--c"></div>
+            <div class="related-card__body">
+              <span class="related-card__type">Broadcast Idents</span>
+              <h3 class="related-card__title">Channel 4 Identity</h3>
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <!-- Project-level CTA -->
+      <div class="project-cta" id="contact">
+        <h2 class="project-cta__heading">Got a similar project?</h2>
+        <p class="project-cta__sub">James is available for live events, broadcast and brand work worldwide.</p>
+        <a href="mailto:hello@jamesmobbs.com" class="cta-pill">Get in Touch</a>
+      </div>
+
+    </main>
+
+    <!-- ── Footer ──────────────────────────────────── -->
+    <footer class="site-footer">
+      <div class="site-footer__grid">
+        <div class="site-footer__brand">
+          <a href="index.html" class="brand-pill brand-pill--footer">
+            <img src="img/jm-logo.svg" alt="James Mobbs" class="brand-pill__logo"/>
+          </a>
+          <p class="site-footer__tagline">Creative direction, motion design and experience design for music, culture and global brands.</p>
+          <p class="site-footer__copy">© 2026 James Mobbs. All rights reserved.</p>
+        </div>
+        <div class="site-footer__cols">
+          <div>
+            <p class="site-footer__col-label">Work</p>
+            <ul class="site-footer__col-links">
+              <li><a href="index.html#case-studies" class="site-footer__link">Case Studies</a></li>
+              <li><a href="#" class="site-footer__link">Live Visuals</a></li>
+              <li><a href="#" class="site-footer__link">Broadcast</a></li>
+              <li><a href="#" class="site-footer__link">Brand Launches</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="site-footer__col-label">Studio</p>
+            <ul class="site-footer__col-links">
+              <li><a href="about.html" class="site-footer__link">About</a></li>
+              <li><a href="about.html#process" class="site-footer__link">Process</a></li>
+              <li><a href="about.html#clients" class="site-footer__link">Clients</a></li>
+              <li><a href="about.html#awards" class="site-footer__link">Awards</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="site-footer__col-label">Connect</p>
+            <ul class="site-footer__col-links">
+              <li><a href="#contact" class="site-footer__link">Contact</a></li>
+              <li><a href="#" class="site-footer__link">Press Kit</a></li>
+              <li><a href="#" class="site-footer__link">Newsletter</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="site-footer__col-label">Social</p>
+            <ul class="site-footer__col-links">
+              <li><a href="#" class="site-footer__link">Instagram</a></li>
+              <li><a href="#" class="site-footer__link">LinkedIn</a></li>
+              <li><a href="#" class="site-footer__link">Vimeo</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="site-footer__bottom">
+        <p class="site-footer__copy">Crafted with care in Manchester, UK</p>
+        <div class="site-footer__legal">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms</a>
+        </div>
+      </div>
+    </footer>
+
+  </div><!-- /site-layout -->
+
+  <!-- Mobile Nav Drawer -->
+  <nav class="nav-drawer" id="nav-drawer" aria-label="Mobile navigation" aria-hidden="true">
+    <div class="nav-drawer__top">
+      <a href="index.html" class="brand-pill brand-pill--footer">
+        <img src="img/jm-logo.svg" alt="James Mobbs" class="brand-pill__logo"/>
+      </a>
+      <button class="nav-drawer__close" id="menu-close" aria-label="Close menu">✕</button>
+    </div>
+    <div class="nav-drawer__links">
+      <a href="index.html"              class="nav-drawer__link">Home</a>
+      <a href="index.html#case-studies" class="nav-drawer__link is-active">Work</a>
+      <a href="about.html"              class="nav-drawer__link">About</a>
+      <a href="#contact"                class="nav-drawer__link">Contact</a>
+    </div>
+    <div class="nav-drawer__bottom">
+      <a href="#contact" class="cta-pill">Get in Touch</a>
+      <div class="nav-drawer__social">
+        <a href="#" class="nav-drawer__social-link">Instagram</a>
+        <a href="#" class="nav-drawer__social-link">Vimeo</a>
+        <a href="#" class="nav-drawer__social-link">LinkedIn</a>
+      </div>
+    </div>
+  </nav>
+
+  <script src="js/three.min.js"></script>
+  <script src="js/carousel.js" defer></script>
+  <script src="js/blob.js" defer></script>
+  <script src="js/nav.js" defer></script>
+
+</body>
+</html>
