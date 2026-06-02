@@ -11,8 +11,9 @@
 
   const viewport    = document.querySelector('.carousel__viewport');
   const track       = document.getElementById('js-track');
-  const ambient     = document.getElementById('js-ambient');
+  const ambient     = document.getElementById('js-ambient');  /* may be null on project pages */
   const pageAmbient = document.querySelector('.site__gradient');
+  const noAutoplay  = !!viewport && !!viewport.closest('[data-no-autoplay]');
 
   /* ── Clone slides for infinite wrap ─────────── */
   const realSlides = Array.from(track.querySelectorAll('.carousel__slide:not(.is-clone)'));
@@ -31,13 +32,18 @@
   let dragStartX  = 0;
   let dragDelta   = 0;
   let isDragging  = false;
+  let wasSwipe    = false;
 
   /* ── Geometry ────────────────────────────────── */
   function slideWidth() { return allSlides[0].offsetWidth; }
   function trackGap()   { return parseFloat(getComputedStyle(track).gap) || 12; }
   function centreOffset(idx) {
-    const sw = slideWidth(), g = trackGap(), vw = viewport.offsetWidth;
-    return (vw - sw) / 2 - idx * (sw + g);
+    const sw = slideWidth(), g = trackGap();
+    /* Read the resolved gutter: carousel has margin-left: calc(-1 * --gutter),
+       so the computed value is a negative px number — negate it to get gutter. */
+    const heroEl = viewport.closest('.hero-carousel');
+    const gutter = heroEl ? -parseFloat(getComputedStyle(heroEl).marginLeft) || 0 : 0;
+    return gutter - idx * (sw + g);
   }
 
   /* ── 3-D transforms ──────────────────────────── */
@@ -57,13 +63,11 @@
   /* ── Ambient crossfade ───────────────────────── */
   function setAmbient(realIndex) {
     const img = SLIDES_DATA[realIndex].img;
-    ambient.classList.remove('is-visible');
-    pageAmbient.classList.remove('is-visible');
+    if (ambient) ambient.classList.remove('is-visible');
+    if (pageAmbient) pageAmbient.classList.remove('is-visible');
     setTimeout(() => {
-      ambient.style.backgroundImage     = `url(${img})`;
-      pageAmbient.style.backgroundImage = `url(${img})`;
-      ambient.classList.add('is-visible');
-      pageAmbient.classList.add('is-visible');
+      if (ambient) { ambient.style.backgroundImage = `url(${img})`; ambient.classList.add('is-visible'); }
+      if (pageAmbient) { pageAmbient.style.backgroundImage = `url(${img})`; pageAmbient.classList.add('is-visible'); }
     }, 220);
   }
 
@@ -114,8 +118,8 @@
     const H = frame.offsetHeight;
     const r = 23; // matches CSS --radius-card
 
-    const cw  = `M ${W/2} ${H} H ${W-r} Q ${W} ${H} ${W} ${H-r} V ${r} Q ${W} 0 ${W-r} 0 H ${W/2}`;
-    const ccw = `M ${W/2} ${H} H ${r} Q 0 ${H} 0 ${H-r} V ${r} Q 0 0 ${r} 0 H ${W/2}`;
+    const cw  = `M ${W/2} 0 H ${W-r} Q ${W} 0 ${W} ${r} V ${H-r} Q ${W} ${H} ${W-r} ${H} H ${W/2}`;
+    const ccw = `M ${W/2} 0 H ${r} Q 0 0 0 ${r} V ${H-r} Q 0 ${H} ${r} ${H} H ${W/2}`;
 
     sweepCW.setAttribute('d',  cw);
     sweepCCW.setAttribute('d', ccw);
@@ -152,6 +156,7 @@
   /* ── Auto-advance + pie ──────────────────────── */
   function resetTimer() {
     clearInterval(timer);
+    if (noAutoplay) return;
     timer = setInterval(advance, INTERVAL);
     startPie();
   }
@@ -182,6 +187,7 @@
     if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
     viewport.classList.remove('is-dragging');
     track.classList.remove('no-transition');
+    wasSwipe = Math.abs(dragDelta) > 6;
     if      (dragDelta < -DRAG_THRESHOLD) goTo(domCurrent + 1);
     else if (dragDelta >  DRAG_THRESHOLD) goTo(domCurrent - 1);
     else moveTo(domCurrent, true);
@@ -189,10 +195,18 @@
     resetTimer();
   }
 
-  /* Mouse */
-  viewport.addEventListener('mousedown',  (e) => { e.preventDefault(); onDragStart(e.clientX); });
+  /* Prevent native browser drag (links/images) from hijacking the custom drag */
+  viewport.addEventListener('dragstart', (e) => e.preventDefault());
+
+  /* Mouse — no preventDefault so <a> links inside slides remain clickable */
+  viewport.addEventListener('mousedown',  (e) => { onDragStart(e.clientX); });
   document.addEventListener('mousemove',  (e) => onDragMove(e.clientX));
   document.addEventListener('mouseup',    ()  => onDragEnd());
+
+  /* Suppress link navigation when the interaction was a drag, not a tap */
+  viewport.addEventListener('click', (e) => {
+    if (wasSwipe) { e.preventDefault(); wasSwipe = false; }
+  }, true);
 
   /* Touch */
   viewport.addEventListener('touchstart', (e) => onDragStart(e.touches[0].clientX), { passive: true });
@@ -229,10 +243,8 @@
   requestAnimationFrame(() => {
     moveTo(1, false);
     const img = SLIDES_DATA[0].img;
-    ambient.style.backgroundImage     = `url(${img})`;
-    pageAmbient.style.backgroundImage = `url(${img})`;
-    ambient.classList.add('is-visible');
-    pageAmbient.classList.add('is-visible');
+    if (ambient) { ambient.style.backgroundImage = `url(${img})`; ambient.classList.add('is-visible'); }
+    if (pageAmbient) { pageAmbient.style.backgroundImage = `url(${img})`; pageAmbient.classList.add('is-visible'); }
     resetTimer();
     requestAnimationFrame(() => document.body.classList.add('is-loaded'));
   });

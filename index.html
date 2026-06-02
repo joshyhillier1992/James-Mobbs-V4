@@ -37,9 +37,9 @@
         <a href="index.html" class="main-nav__item main-nav__item--active">Home</a>
         <a href="#case-studies" class="main-nav__item">Case Studies</a>
         <a href="about.html" class="main-nav__item">About</a>
-        <button class="main-nav__search" type="button" aria-label="Search">
-          <span class="main-nav__search-icon"></span>
-        </button>
+        <button class="main-nav__search" type="button" aria-label="Search" id="search-open">
+            <svg class="main-nav__search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="6.5" cy="6.5" r="4"/><line x1="9.5" y1="9.5" x2="14" y2="14"/></svg>
+          </button>
       </nav>
 
       <a href="#contact" class="cta-pill">Contact</a>
@@ -64,7 +64,7 @@
           <!-- Slide 1 · Hits Radio -->
           <article class="carousel__slide is-active" data-index="0">
             <svg class="carousel__sweep" aria-hidden="true"><path class="carousel__sweep-cw"/><path class="carousel__sweep-ccw"/></svg>
-            <div class="carousel__frame">
+            <a href="project.html" class="carousel__frame">
               <div class="carousel__media carousel__media--hits"></div>
               <div class="carousel__media-fade"></div>
               <footer class="carousel__info">
@@ -82,13 +82,13 @@
                   their live shows, unveiling the station's new identity.
                 </p>
               </footer>
-            </div>
+            </a>
           </article>
 
           <!-- Slide 2 · Summer Festival -->
           <article class="carousel__slide" data-index="1">
             <svg class="carousel__sweep" aria-hidden="true"><path class="carousel__sweep-cw"/><path class="carousel__sweep-ccw"/></svg>
-            <div class="carousel__frame">
+            <a href="project.html" class="carousel__frame">
               <div class="carousel__media carousel__media--festival"></div>
               <div class="carousel__media-fade"></div>
               <footer class="carousel__info">
@@ -101,13 +101,13 @@
                   set transitions to idents and real-time performance graphics.
                 </p>
               </footer>
-            </div>
+            </a>
           </article>
 
           <!-- Slide 3 · Global Brand -->
           <article class="carousel__slide" data-index="2">
             <svg class="carousel__sweep" aria-hidden="true"><path class="carousel__sweep-cw"/><path class="carousel__sweep-ccw"/></svg>
-            <div class="carousel__frame">
+            <a href="project.html" class="carousel__frame">
               <div class="carousel__media carousel__media--brand"></div>
               <div class="carousel__media-fade"></div>
               <footer class="carousel__info">
@@ -120,7 +120,7 @@
                   visual identity, from the reveal film to on-site screen content.
                 </p>
               </footer>
-            </div>
+            </a>
           </article>
 
         </div><!-- /track -->
@@ -132,94 +132,101 @@
     <!-- ── Case Studies ──────────────────────────────── -->
     <section class="case-studies" id="case-studies" aria-labelledby="cs-heading">
       <div class="case-studies__header">
-        <div>
-          <p class="section-title" id="cs-heading">Case Studies</p>
-          <p class="case-studies__subtitle">Featured work across live events, broadcast and global brand launches.</p>
-        </div>
-        <a href="#" class="btn-ghost">View All Work</a>
+        <p class="section-title" id="cs-heading">Case Studies</p>
       </div>
 
       <div class="case-studies__grid">
 
         <!-- Wide card -->
-        <article class="case-card case-card--wide">
-          <div class="case-card__media case-card__media--hits" style="height:260px; background-size:cover;background-position:center;"></div>
+        <a href="project.html" class="case-card case-card--wide">
+          <div class="case-card__media case-card__media--hits"></div>
           <div class="case-card__content">
             <p class="case-card__overline">Live Visuals · 2024</p>
             <h3 class="case-card__title">Hits Radio — An Immersive Experience</h3>
             <p class="case-card__meta">LED wall content, full show package and real-time performance graphics for the Hits Radio Relaunch Tour across the UK.</p>
           </div>
-        </article>
+        </a>
 
-        <article class="case-card">
+        <a href="project.html" class="case-card">
           <div class="case-card__media case-card__media--festival"></div>
           <div class="case-card__content">
             <p class="case-card__overline">Stage Identity · 2024</p>
-            <h3 class="case-card__title">Light, Smoke & Screens</h3>
+            <h3 class="case-card__title">Light, Smoke &amp; Screens</h3>
             <p class="case-card__meta">Full show package for a sold-out summer festival.</p>
           </div>
-        </article>
+        </a>
 
-        <article class="case-card">
+        <a href="project.html" class="case-card">
           <div class="case-card__media case-card__media--brand"></div>
           <div class="case-card__content">
             <p class="case-card__overline">Brand Launch · 2023</p>
             <h3 class="case-card__title">Designing the Opening Moment</h3>
             <p class="case-card__meta">Cinematic opening sequence for a global brand launch event.</p>
           </div>
-        </article>
+        </a>
 
       </div>
     </section>
 
-    <!-- ── More Projects (horizontal scroll) ────────── -->
+    <!-- ── More Projects (showcase list) ───────── -->
     <section class="projects" aria-label="More projects">
       <div class="projects__header">
         <p class="section-title">More Work</p>
-        <a href="#" class="projects__see-all">See all →</a>
+        <a href="#" class="projects__see-all">All Work</a>
       </div>
-      <div class="projects__strip">
+      <div class="projects__showcase">
+        <div class="projects__preview-wrap" id="js-proj-preview" aria-hidden="true">
+          <div class="projects__preview-img" id="js-proj-preview-img"></div>
+        </div>
 
-        <a href="project.html" class="project-card" style="text-decoration:none;color:inherit;">
-          <div class="project-card__thumb project-card__thumb--a"></div>
-          <div class="project-card__body">
-            <span class="project-card__type">Broadcast Idents</span>
-            <h3 class="project-card__title">Channel 4 — Identity</h3>
-          </div>
-        </a>
+        <ol class="projects__list">
 
-        <a href="project.html" class="project-card" style="text-decoration:none;color:inherit;">
-          <div class="project-card__thumb project-card__thumb--b"></div>
-          <div class="project-card__body">
-            <span class="project-card__type">Live Event</span>
-            <h3 class="project-card__title">BBC Proms 2023</h3>
-          </div>
-        </a>
+          <li class="project-item">
+            <a href="project.html" class="project-item__link"
+               data-preview-bg="linear-gradient(135deg,#0e0510 0%,#3a0825 70%,#5c1040 100%)">
+              <span class="project-item__num">01</span>
+              <span class="project-item__title">Channel 4 — Identity</span>
+              <span class="project-item__type">Broadcast Idents</span>
+            </a>
+          </li>
 
-        <a href="project.html" class="project-card" style="text-decoration:none;color:inherit;">
-          <div class="project-card__thumb project-card__thumb--c"></div>
-          <div class="project-card__body">
-            <span class="project-card__type">Brand Film</span>
-            <h3 class="project-card__title">Nike — Just Do It</h3>
-          </div>
-        </a>
+          <li class="project-item">
+            <a href="project.html" class="project-item__link"
+               data-preview-bg="linear-gradient(135deg,#04080d 0%,#081828 70%,#0a2438 100%)">
+              <span class="project-item__num">02</span>
+              <span class="project-item__title">BBC Proms 2023</span>
+              <span class="project-item__type">Live Event</span>
+            </a>
+          </li>
 
-        <a href="project.html" class="project-card" style="text-decoration:none;color:inherit;">
-          <div class="project-card__thumb project-card__thumb--d"></div>
-          <div class="project-card__body">
-            <span class="project-card__type">Awards Show</span>
-            <h3 class="project-card__title">BRIT Awards 2024</h3>
-          </div>
-        </a>
+          <li class="project-item">
+            <a href="project.html" class="project-item__link"
+               data-preview-bg="linear-gradient(135deg,#040804 0%,#0a1a06 70%,#122406 100%)">
+              <span class="project-item__num">03</span>
+              <span class="project-item__title">Nike — Just Do It</span>
+              <span class="project-item__type">Brand Film</span>
+            </a>
+          </li>
 
-        <a href="project.html" class="project-card" style="text-decoration:none;color:inherit;">
-          <div class="project-card__thumb project-card__thumb--a" style="background:linear-gradient(135deg,#0a2020,#4cf5ff80);"></div>
-          <div class="project-card__body">
-            <span class="project-card__type">Stage Design</span>
-            <h3 class="project-card__title">Glastonbury — Pyramid Stage</h3>
-          </div>
-        </a>
+          <li class="project-item">
+            <a href="project.html" class="project-item__link"
+               data-preview-bg="linear-gradient(135deg,#0d0804 0%,#221006 70%,#301808 100%)">
+              <span class="project-item__num">04</span>
+              <span class="project-item__title">BRIT Awards 2024</span>
+              <span class="project-item__type">Awards Show</span>
+            </a>
+          </li>
 
+          <li class="project-item">
+            <a href="project.html" class="project-item__link"
+               data-preview-bg="linear-gradient(135deg,#040810 0%,#081525 70%,#0c1e30 100%)">
+              <span class="project-item__num">05</span>
+              <span class="project-item__title">Glastonbury — Pyramid Stage</span>
+              <span class="project-item__type">Stage Design</span>
+            </a>
+          </li>
+
+        </ol>
       </div>
     </section>
 
@@ -258,94 +265,10 @@
 
   </main>
 
-  <!-- ── Footer ────────────────────────────────────── -->
-  <footer class="site-footer">
-
-    <div class="site-footer__grid">
-
-      <!-- Brand column -->
-      <div class="site-footer__brand">
-        <a href="/" class="brand-pill brand-pill--footer">
-          <img src="img/jm-logo.svg" alt="James Mobbs" class="brand-pill__logo"/>
-        </a>
-        <p class="site-footer__tagline">Creative direction, motion design and experience design for music, culture and global brands.</p>
-        <p class="site-footer__copy">© 2026 James Mobbs. All rights reserved.</p>
-      </div>
-
-      <!-- Link columns -->
-      <div class="site-footer__cols">
-
-        <div>
-          <p class="site-footer__col-label">Work</p>
-          <ul class="site-footer__col-links">
-            <li><a href="#" class="site-footer__link">Case Studies</a></li>
-            <li><a href="#" class="site-footer__link">Live Visuals</a></li>
-            <li><a href="#" class="site-footer__link">Broadcast</a></li>
-            <li><a href="#" class="site-footer__link">Brand Launches</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <p class="site-footer__col-label">Studio</p>
-          <ul class="site-footer__col-links">
-            <li><a href="#" class="site-footer__link">About</a></li>
-            <li><a href="#" class="site-footer__link">Process</a></li>
-            <li><a href="#" class="site-footer__link">Clients</a></li>
-            <li><a href="#" class="site-footer__link">Awards</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <p class="site-footer__col-label">Connect</p>
-          <ul class="site-footer__col-links">
-            <li><a href="#contact" class="site-footer__link">Contact</a></li>
-            <li><a href="#" class="site-footer__link">Press Kit</a></li>
-            <li><a href="#" class="site-footer__link">Newsletter</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <p class="site-footer__col-label">Social</p>
-          <ul class="site-footer__col-links">
-            <li>
-              <a href="#" class="site-footer__link">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-                Instagram
-              </a>
-            </li>
-            <li>
-              <a href="#" class="site-footer__link">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-                LinkedIn
-              </a>
-            </li>
-            <li>
-              <a href="#" class="site-footer__link">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.7 5.5 4.4 9 4.5-.1-.8-.1-1.6 0-2.3.7-3.3 4.4-5.3 7.5-4 1.4.7 2.6 1.8 3.5 3z"/></svg>
-                Twitter / X
-              </a>
-            </li>
-            <li>
-              <a href="#" class="site-footer__link">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M21 7c-.1 2.7-2 6.4-5.6 11.1C11.7 23 8.7 23 6.4 21c-2.2-1.9-1.6-7.3.4-11.5L9 14s1.3-2.6 2-5.7C9 10 6 11 5 8c1-4 7-5 9-2 1-3 5-4 7-1z"/></svg>
-                Vimeo
-              </a>
-            </li>
-          </ul>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="site-footer__bottom">
-      <p class="site-footer__copy">Crafted with care in Manchester, UK</p>
-      <div class="site-footer__legal">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms</a>
-      </div>
-    </div>
-
-  </footer>
+  <div class="site-colophon">
+    <span>© 2026 James Mobbs</span>
+    <span>Manchester, UK</span>
+  </div>
 
   </div><!-- /site-layout -->
 
@@ -376,6 +299,21 @@
   <script src="js/carousel.js" defer></script>
   <script src="js/blob.js" defer></script>
   <script src="js/nav.js" defer></script>
+  <script src="js/scroll.js" defer></script>
+
+
+  <!-- Search overlay -->
+  <div class="search-overlay" id="search-overlay" aria-hidden="true" role="dialog" aria-label="Search">
+    <div class="search-overlay__inner">
+      <form class="search-overlay__form" role="search" onsubmit="return false;">
+        <svg class="search-overlay__icon" width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="6.5" cy="6.5" r="4"/><line x1="9.5" y1="9.5" x2="14" y2="14"/></svg>
+        <input type="search" class="search-overlay__input" id="search-input" placeholder="Search projects..." autocomplete="off" spellcheck="false"/>
+      </form>
+      <button class="search-overlay__close" id="search-close" aria-label="Close search">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="3" x2="15" y2="15"/><line x1="15" y1="3" x2="3" y2="15"/></svg>
+      </button>
+    </div>
+  </div>
 
 </body>
 </html>

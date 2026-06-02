@@ -331,7 +331,7 @@
     }
 
     /* ── Events ─────────────────────────────────────────────── */
-    container.addEventListener('click', function () { if (!isExpanded) expand(); });
+    container.addEventListener('click', function (e) { if (!isExpanded && !e.target.closest('a')) expand(); });
     if (closeBtn) closeBtn.addEventListener('click', function (e) { e.stopPropagation(); collapse(); });
     if (backdrop) backdrop.addEventListener('click', collapse);
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && isExpanded) collapse(); });

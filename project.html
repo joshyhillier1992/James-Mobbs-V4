@@ -47,13 +47,18 @@
 
     <header class="site-header">
       <div class="site-header__inner">
-        <div id="blob-anchor" class="blob-anchor" aria-hidden="true"></div>
+        <div class="site-header__left">
+          <a href="index.html" class="nav-back" aria-label="Back to work">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13L5 8l5-5"/></svg>
+          </a>
+          <div id="blob-anchor" class="blob-anchor" aria-hidden="true"></div>
+        </div>
         <nav class="main-nav" aria-label="Main navigation">
           <a href="index.html"   class="main-nav__item">Home</a>
           <a href="index.html#case-studies" class="main-nav__item main-nav__item--active">Case Studies</a>
           <a href="about.html"   class="main-nav__item">About</a>
-          <button class="main-nav__search" type="button" aria-label="Search">
-            <span class="main-nav__search-icon"></span>
+          <button class="main-nav__search" type="button" aria-label="Search" id="search-open">
+            <svg class="main-nav__search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="6.5" cy="6.5" r="4"/><line x1="9.5" y1="9.5" x2="14" y2="14"/></svg>
           </button>
         </nav>
         <a href="#contact" class="cta-pill">Contact</a>
@@ -71,11 +76,6 @@
            year, role, duration
       ═══════════════════════════════════════════ -->
       <section class="block block--hero">
-        <a href="index.html" class="project-hero__back">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 12L6 8l4-4"/></svg>
-          All Work
-        </a>
-
         <div class="project-hero__tags">
           <span class="project-hero__tag project-hero__tag--primary">Live Visuals</span>
           <span class="project-hero__tag">Show Package</span>
@@ -98,13 +98,11 @@
 
       <!-- ═══════════════════════════════════════════
            BLOCK 2 · MEDIA CAROUSEL
-           Reuses existing carousel JS.
            WordPress: add/remove slide articles,
            swap background-image URLs.
       ═══════════════════════════════════════════ -->
       <section class="block block--carousel">
-        <div class="hero-carousel" aria-label="Project images">
-          <div class="carousel__ambient" id="js-ambient"></div>
+        <div class="hero-carousel" aria-label="Project images" data-no-autoplay>
           <div class="carousel__viewport">
             <div class="carousel__track" id="js-track">
 
@@ -189,13 +187,18 @@
       ═══════════════════════════════════════════ -->
       <section class="block block--gallery">
         <p class="block__label">Gallery</p>
-        <div class="gallery-grid gallery-grid--3col">
-          <div class="gallery-item gallery-item--a"></div>
-          <div class="gallery-item gallery-item--b"></div>
-          <div class="gallery-item gallery-item--c"></div>
-          <div class="gallery-item gallery-item--wide gallery-item--a" style="opacity:0.7;"></div>
-          <div class="gallery-item gallery-item--d"></div>
-          <div class="gallery-item gallery-item--e"></div>
+        <div class="masonry-grid">
+
+          <div class="masonry-item masonry-item--wide gallery-item--a"></div>
+
+          <div class="masonry-item masonry-item--tall gallery-item--b"></div>
+
+          <div class="masonry-item masonry-item--tall gallery-item--a" style="opacity:0.85;"></div>
+
+          <div class="masonry-item gallery-item--c"></div>
+
+          <div class="masonry-item gallery-item--d"></div>
+
         </div>
       </section>
 
@@ -345,61 +348,10 @@
 
     </main>
 
-    <!-- ── Footer ──────────────────────────────────── -->
-    <footer class="site-footer">
-      <div class="site-footer__grid">
-        <div class="site-footer__brand">
-          <a href="index.html" class="brand-pill brand-pill--footer">
-            <img src="img/jm-logo.svg" alt="James Mobbs" class="brand-pill__logo"/>
-          </a>
-          <p class="site-footer__tagline">Creative direction, motion design and experience design for music, culture and global brands.</p>
-          <p class="site-footer__copy">© 2026 James Mobbs. All rights reserved.</p>
-        </div>
-        <div class="site-footer__cols">
-          <div>
-            <p class="site-footer__col-label">Work</p>
-            <ul class="site-footer__col-links">
-              <li><a href="index.html#case-studies" class="site-footer__link">Case Studies</a></li>
-              <li><a href="#" class="site-footer__link">Live Visuals</a></li>
-              <li><a href="#" class="site-footer__link">Broadcast</a></li>
-              <li><a href="#" class="site-footer__link">Brand Launches</a></li>
-            </ul>
-          </div>
-          <div>
-            <p class="site-footer__col-label">Studio</p>
-            <ul class="site-footer__col-links">
-              <li><a href="about.html" class="site-footer__link">About</a></li>
-              <li><a href="about.html#process" class="site-footer__link">Process</a></li>
-              <li><a href="about.html#clients" class="site-footer__link">Clients</a></li>
-              <li><a href="about.html#awards" class="site-footer__link">Awards</a></li>
-            </ul>
-          </div>
-          <div>
-            <p class="site-footer__col-label">Connect</p>
-            <ul class="site-footer__col-links">
-              <li><a href="#contact" class="site-footer__link">Contact</a></li>
-              <li><a href="#" class="site-footer__link">Press Kit</a></li>
-              <li><a href="#" class="site-footer__link">Newsletter</a></li>
-            </ul>
-          </div>
-          <div>
-            <p class="site-footer__col-label">Social</p>
-            <ul class="site-footer__col-links">
-              <li><a href="#" class="site-footer__link">Instagram</a></li>
-              <li><a href="#" class="site-footer__link">LinkedIn</a></li>
-              <li><a href="#" class="site-footer__link">Vimeo</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div class="site-footer__bottom">
-        <p class="site-footer__copy">Crafted with care in Manchester, UK</p>
-        <div class="site-footer__legal">
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms</a>
-        </div>
-      </div>
-    </footer>
+  <div class="site-colophon">
+    <span>© 2026 James Mobbs</span>
+    <span>Manchester, UK</span>
+  </div>
 
   </div><!-- /site-layout -->
 
@@ -431,6 +383,21 @@
   <script src="js/carousel.js" defer></script>
   <script src="js/blob.js" defer></script>
   <script src="js/nav.js" defer></script>
+  <script src="js/scroll.js" defer></script>
+
+
+  <!-- Search overlay -->
+  <div class="search-overlay" id="search-overlay" aria-hidden="true" role="dialog" aria-label="Search">
+    <div class="search-overlay__inner">
+      <form class="search-overlay__form" role="search" onsubmit="return false;">
+        <svg class="search-overlay__icon" width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="6.5" cy="6.5" r="4"/><line x1="9.5" y1="9.5" x2="14" y2="14"/></svg>
+        <input type="search" class="search-overlay__input" id="search-input" placeholder="Search projects..." autocomplete="off" spellcheck="false"/>
+      </form>
+      <button class="search-overlay__close" id="search-close" aria-label="Close search">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="3" x2="15" y2="15"/><line x1="15" y1="3" x2="3" y2="15"/></svg>
+      </button>
+    </div>
+  </div>
 
 </body>
 </html>

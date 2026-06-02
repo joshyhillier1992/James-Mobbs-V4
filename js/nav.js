@@ -12,8 +12,7 @@
   const openBtn  = document.getElementById('menu-open');
   const closeBtn = document.getElementById('menu-close');
 
-  if (!drawer || !openBtn) return;
-
+  if (drawer && openBtn) {
   function openDrawer() {
     drawer.classList.add('is-open');
     drawer.removeAttribute('aria-hidden');
@@ -47,15 +46,85 @@
       setTimeout(closeDrawer, 80);
     });
   });
+  } /* end drawer block */
 
-  /* Scroll-reveal for nav — show after scrolling past 80px */
-  const nav = document.querySelector('.main-nav');
-  if (nav) {
-    const THRESHOLD = 80;
-    function onScroll() {
-      document.body.classList.toggle('nav-visible', window.scrollY > THRESHOLD);
+  /* ── Search overlay ──────────────────────────── */
+  const searchOpenBtn  = document.getElementById('search-open');
+  const searchOverlay  = document.getElementById('search-overlay');
+  const searchCloseBtn = document.getElementById('search-close');
+  const searchInput    = document.getElementById('search-input');
+
+  if (searchOpenBtn && searchOverlay) {
+    function openSearch() {
+      searchOverlay.classList.add('is-open');
+      searchOverlay.removeAttribute('aria-hidden');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => searchInput && searchInput.focus(), 60);
     }
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
+
+    function closeSearch() {
+      searchOverlay.classList.remove('is-open');
+      searchOverlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    searchOpenBtn.addEventListener('click', openSearch);
+    searchCloseBtn && searchCloseBtn.addEventListener('click', closeSearch);
+
+    searchOverlay.addEventListener('click', (e) => {
+      if (e.target === searchOverlay) closeSearch();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && searchOverlay.classList.contains('is-open')) closeSearch();
+    });
   }
+
+  /* ── Work list preview — follows cursor ─────── */
+  const projItems   = document.querySelectorAll('.project-item__link');
+  const projPreview = document.getElementById('js-proj-preview');
+  const projImg     = document.getElementById('js-proj-preview-img');
+
+  if (projPreview && projItems.length) {
+    let moveRaf = null;
+
+    function placePreview(x, y) {
+      const pw = projPreview.offsetWidth;
+      const ph = projPreview.offsetHeight;
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const offset = 28;
+
+      let left = x + offset;
+      let top  = y - ph / 2;
+
+      /* Flip left when too close to right edge */
+      if (left + pw > vw - 16) left = x - pw - offset;
+      /* Clamp vertically */
+      top = Math.max(12, Math.min(top, vh - ph - 12));
+
+      projPreview.style.left = left + 'px';
+      projPreview.style.top  = top  + 'px';
+    }
+
+    function onMove(e) {
+      if (moveRaf) cancelAnimationFrame(moveRaf);
+      moveRaf = requestAnimationFrame(() => placePreview(e.clientX, e.clientY));
+    }
+
+    projItems.forEach((link) => {
+      link.addEventListener('mouseenter', (e) => {
+        const bg = link.dataset.previewBg;
+        if (bg && projImg) projImg.style.background = bg;
+        placePreview(e.clientX, e.clientY);
+        projPreview.classList.add('is-visible');
+        document.addEventListener('mousemove', onMove);
+      });
+      link.addEventListener('mouseleave', () => {
+        projPreview.classList.remove('is-visible');
+        document.removeEventListener('mousemove', onMove);
+      });
+    });
+  }
+
 })();
