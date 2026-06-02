@@ -42,7 +42,44 @@
     });
   }
 
-  /* ── 2. Glass spotlight — cursor-following radial glow ─────────── */
+  /* ── 2. Stat counter — counts up when scrolled into view ──────── */
+  function runCountUp(el) {
+    const raw    = el.textContent.trim();
+    const suffix = raw.replace(/[\d]/g, '');       /* e.g. "+" or "m²" */
+    const target = parseInt(raw.replace(/\D/g, ''), 10);
+    if (isNaN(target) || target === 0) return;
+
+    const DURATION = 1800;
+    const start    = performance.now();
+
+    /* Ease-out cubic for natural deceleration */
+    function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+
+    (function tick(now) {
+      const t       = Math.min((now - start) / DURATION, 1);
+      const current = Math.round(easeOut(t) * target);
+      el.textContent = current + suffix;
+      if (t < 1) requestAnimationFrame(tick);
+    })(start);
+  }
+
+  if ('IntersectionObserver' in window) {
+    const counterIO = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.querySelectorAll('.stat__number').forEach((num, i) => {
+          /* Stagger each counter by 120ms */
+          setTimeout(() => runCountUp(num), i * 120);
+        });
+        counterIO.unobserve(entry.target);
+      });
+    }, { threshold: 0.4 });
+
+    const statsBar = document.querySelector('.stats-bar');
+    if (statsBar) counterIO.observe(statsBar);
+  }
+
+  /* ── 3. Glass spotlight — cursor-following radial glow ─────────── */
   document.querySelectorAll(
     '.case-card, .stats-bar, .contact-section, .nav-back, .main-nav'
   ).forEach((card) => {

@@ -115,7 +115,7 @@
     projItems.forEach((link) => {
       link.addEventListener('mouseenter', (e) => {
         const bg = link.dataset.previewBg;
-        if (bg && projImg) projImg.style.background = bg;
+        if (bg && projImg) projImg.style.backgroundImage = bg;
         placePreview(e.clientX, e.clientY);
         projPreview.classList.add('is-visible');
         document.addEventListener('mousemove', onMove);
