@@ -39,10 +39,15 @@
   function trackGap()   { return parseFloat(getComputedStyle(track).gap) || 12; }
   function centreOffset(idx) {
     const sw = slideWidth(), g = trackGap();
-    /* Read the resolved gutter: carousel has margin-left: calc(-1 * --gutter),
-       so the computed value is a negative px number — negate it to get gutter. */
-    const heroEl = viewport.closest('.hero-carousel');
-    const gutter = heroEl ? -parseFloat(getComputedStyle(heroEl).marginLeft) || 0 : 0;
+    /* Measure the true content left edge from viewport left.
+       Works on all widths including wide screens where site-layout is centred. */
+    const siteLayout = document.querySelector('.site-layout');
+    let gutter = 0;
+    if (siteLayout) {
+      const rect = siteLayout.getBoundingClientRect();
+      const pad  = parseFloat(getComputedStyle(siteLayout).paddingLeft) || 0;
+      gutter = Math.max(0, rect.left) + pad;
+    }
     return gutter - idx * (sw + g);
   }
 
@@ -198,15 +203,17 @@
   /* Prevent native browser drag (links/images) from hijacking the custom drag */
   viewport.addEventListener('dragstart', (e) => e.preventDefault());
 
-  /* Mouse — no preventDefault so <a> links inside slides remain clickable */
-  viewport.addEventListener('mousedown',  (e) => { onDragStart(e.clientX); });
+  /* Mouse — preventDefault restores reliable drag; tap-to-navigate handled manually in mouseup */
+  viewport.addEventListener('mousedown',  (e) => { e.preventDefault(); onDragStart(e.clientX); });
   document.addEventListener('mousemove',  (e) => onDragMove(e.clientX));
-  document.addEventListener('mouseup',    ()  => onDragEnd());
-
-  /* Suppress link navigation when the interaction was a drag, not a tap */
-  viewport.addEventListener('click', (e) => {
-    if (wasSwipe) { e.preventDefault(); wasSwipe = false; }
-  }, true);
+  document.addEventListener('mouseup',    (e) => {
+    onDragEnd();
+    /* If it was a tap (no significant drag), navigate any <a> under the pointer */
+    if (!wasSwipe) {
+      const link = e.target.closest('a[href]');
+      if (link && !link.closest('[aria-hidden]')) window.location.href = link.href;
+    }
+  });
 
   /* Touch */
   viewport.addEventListener('touchstart', (e) => onDragStart(e.touches[0].clientX), { passive: true });

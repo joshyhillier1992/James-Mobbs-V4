@@ -160,8 +160,8 @@ body.site {
    JS reads its getBoundingClientRect() after the intro animation ends
    to position the fixed blob. No position:relative needed. */
 .blob-anchor {
-  width: 55px;
-  height: 55px;
+  width: 44px;
+  height: 44px;
   flex-shrink: 0;
 }
 
@@ -172,7 +172,7 @@ body.site {
   position: fixed;
   z-index: 200;
   border-radius: 50%;
-  overflow: hidden;
+  overflow: visible;  /* tooltip lives outside the canvas clip */
   cursor: pointer;
   opacity: 0;
   transition:
@@ -183,11 +183,13 @@ body.site {
 .blob-logo.is-ready    { opacity: 1; }
 .blob-logo.is-expanded { cursor: default; }
 
-/* Canvas wrapper */
+/* Canvas wrapper — carries the circular clip so the outer blob-logo can hold the tooltip */
 .blob-logo__canvas {
   width: 100%;
   height: 100%;
   position: relative;
+  overflow: hidden;
+  border-radius: inherit;
 }
 .blob-logo__canvas canvas { display: block; }
 
@@ -246,6 +248,110 @@ body.site {
   transition: opacity 0.5s ease 0.6s;
 }
 
+/* ── Blob "play with me" — centred screen hint ──────── */
+
+
+/* ── Blob video player ─────────────────────────────── */
+
+.blob-video-wrap {
+  position: absolute;
+  inset: 0;
+  background: rgba(4, 4, 14, 0.94);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  z-index: 20;
+  border-radius: inherit;
+}
+
+.blob-video-wrap.is-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.blob-video-frame {
+  width: min(88vw, 1160px);
+  aspect-ratio: 16 / 9;
+  border-radius: 14px;
+  border: none;
+  box-shadow: 0 32px 96px rgba(0, 0, 0, 0.8);
+}
+
+.blob-video-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 2;
+}
+.blob-video-close:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+}
+
+/* Showreel button — centred in the expanded blob */
+.blob-showreel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease 1s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+.blob-logo.is-expanded .blob-showreel {
+  opacity: 1;
+  pointer-events: auto;
+}
+.blob-showreel__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 14px 32px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: #ffffff;
+  text-decoration: none;
+  font-family: "Alexandria", system-ui, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  transition: background 0.2s, border-color 0.2s;
+}
+.blob-showreel__btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.blob-showreel__hint {
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+}
+
 .brand-pill__logo {
   width: 100%;
   height: 100%;
@@ -274,8 +380,8 @@ body:not(.is-loaded) .main-nav {
   pointer-events: none;
 }
 
-.main-nav__item,
-.main-nav__search {
+/* Base nav link */
+.main-nav__item {
   display: inline-flex;
   align-items: center;
   border: none;
@@ -283,7 +389,7 @@ body:not(.is-loaded) .main-nav {
   color: var(--text-main);
   font: 500 var(--step-0) / 1 "Alexandria", system-ui, sans-serif;
   text-decoration: none;
-  padding: 11px 22px;
+  padding: 10px 20px;
   border-radius: var(--radius-pill);
   cursor: pointer;
   opacity: 0.65;
@@ -291,8 +397,7 @@ body:not(.is-loaded) .main-nav {
   white-space: nowrap;
 }
 
-.main-nav__item:hover,
-.main-nav__search:hover {
+.main-nav__item:hover {
   opacity: 1;
   background: rgba(255, 255, 255, 0.08);
 }
@@ -304,13 +409,6 @@ body:not(.is-loaded) .main-nav {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
-.main-nav__search-icon {
-  display: block;
-  width: 16px;
-  height: 16px;
-  color: rgba(255, 255, 255, 0.85);
-  pointer-events: none;
-}
 
 .cta-pill {
   display: inline-flex;
@@ -359,8 +457,11 @@ body:not(.is-loaded) .main-nav {
 
 .hero-carousel {
   position: relative;
-  /* Bleeds both sides; JS offsets track so active slide's left edge aligns with content margin */
-  margin: -3.5rem calc(-1 * var(--gutter)) 0;
+  /* Full viewport bleed: accounts for both the gutter padding and the
+     site-layout centering offset on screens wider than 1440px */
+  margin: -3.5rem
+          calc(-1 * var(--gutter) - max(0px, (100vw - 1440px) / 2))
+          0;
   z-index: 1;
 }
 
@@ -413,7 +514,7 @@ body:not(.is-loaded) .main-nav {
 
 /* Slides ~85% wide — ~7-8% of each neighbour peeks either side */
 .carousel__slide {
-  flex: 0 0 92%;
+  flex: 0 0 min(92%, 1312px);
   min-width: 0;
   position: relative;
   transition: opacity 1s ease, transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -1009,15 +1110,39 @@ body.is-loaded .case-studies {
 
 /* ── Left header cluster (blob + back btn) ─── */
 
+/* ── Brand mark pill — blob + wordmark as one unit ─── */
+
 .site-header__left {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  pointer-events: none;
+  /* Glass pill — fixed blob renders on top of anchor so it appears embedded */
+  padding: 5px 18px 5px 5px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius-pill);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  pointer-events: auto;
+  transition: background 0.2s, border-color 0.2s;
 }
 
-.site-header__left > * {
-  pointer-events: auto;
+.site-header__left:hover {
+  background: rgba(255, 255, 255, 0.11);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.site-name {
+  font-family: "Bebas Neue", system-ui, sans-serif;
+  font-size: 17px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+  user-select: none;
 }
 
 /* ── Nav back button (project pages) ────────── */
@@ -1058,94 +1183,6 @@ body.is-loaded .nav-back {
   transition: opacity 1s ease 0.8s;
 }
 
-/* ── Search overlay ──────────────────────────── */
-
-.search-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 350;
-  background: rgba(4, 5, 12, 0.94);
-  backdrop-filter: blur(28px) saturate(140%);
-  -webkit-backdrop-filter: blur(28px) saturate(140%);
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding-top: clamp(80px, 18vh, 160px);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.28s ease;
-}
-
-.search-overlay.is-open {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.search-overlay__inner {
-  width: 100%;
-  max-width: 680px;
-  padding: 0 var(--gutter);
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.search-overlay__form {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
-  padding-bottom: 0.875rem;
-}
-
-.search-overlay__icon {
-  color: rgba(255, 255, 255, 0.35);
-  flex-shrink: 0;
-}
-
-.search-overlay__input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: #ffffff;
-  font-family: "Alexandria", system-ui, sans-serif;
-  font-size: clamp(1.25rem, 3.5vw, 2rem);
-  font-weight: 300;
-  letter-spacing: -0.01em;
-  padding: 0;
-  caret-color: rgba(255, 255, 255, 0.8);
-  -webkit-appearance: none;
-}
-
-.search-overlay__input::placeholder {
-  color: rgba(255, 255, 255, 0.18);
-}
-
-.search-overlay__input::-webkit-search-cancel-button {
-  -webkit-appearance: none;
-}
-
-.search-overlay__close {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-  width: 42px;
-  height: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: rgba(255, 255, 255, 0.55);
-  flex-shrink: 0;
-  transition: background 0.2s, color 0.2s;
-}
-
-.search-overlay__close:hover {
-  background: rgba(255, 255, 255, 0.12);
-  color: #ffffff;
-}
 
 
 /* ── Colophon ─────────────────────────────────── */

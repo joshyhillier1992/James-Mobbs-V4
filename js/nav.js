@@ -48,38 +48,6 @@
   });
   } /* end drawer block */
 
-  /* ── Search overlay ──────────────────────────── */
-  const searchOpenBtn  = document.getElementById('search-open');
-  const searchOverlay  = document.getElementById('search-overlay');
-  const searchCloseBtn = document.getElementById('search-close');
-  const searchInput    = document.getElementById('search-input');
-
-  if (searchOpenBtn && searchOverlay) {
-    function openSearch() {
-      searchOverlay.classList.add('is-open');
-      searchOverlay.removeAttribute('aria-hidden');
-      document.body.style.overflow = 'hidden';
-      setTimeout(() => searchInput && searchInput.focus(), 60);
-    }
-
-    function closeSearch() {
-      searchOverlay.classList.remove('is-open');
-      searchOverlay.setAttribute('aria-hidden', 'true');
-      document.body.style.overflow = '';
-    }
-
-    searchOpenBtn.addEventListener('click', openSearch);
-    searchCloseBtn && searchCloseBtn.addEventListener('click', closeSearch);
-
-    searchOverlay.addEventListener('click', (e) => {
-      if (e.target === searchOverlay) closeSearch();
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && searchOverlay.classList.contains('is-open')) closeSearch();
-    });
-  }
-
   /* ── Work list preview — follows cursor ─────── */
   const projItems   = document.querySelectorAll('.project-item__link');
   const projPreview = document.getElementById('js-proj-preview');
