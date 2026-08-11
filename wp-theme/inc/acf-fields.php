@@ -116,7 +116,7 @@ acf_add_local_field_group([
                     'display'=> 'block',
                     'sub_fields' => [
                         ['key' => 'field_v4_split_heading',  'label' => 'Heading',         'name' => 'split_heading',   'type' => 'text'],
-                        ['key' => 'field_5d385a79fec47',     'label' => 'Copy',            'name' => 'copy',            'type' => 'textarea', 'new_lines' => 'wpautop'],
+                        ['key' => 'field_5d385a79fec47',     'label' => 'Copy',            'name' => 'copy',            'type' => 'textarea', 'new_lines' => ''],
                         ['key' => 'field_5d385a99fec48',     'label' => 'Image',           'name' => 'image',           'type' => 'image', 'return_format' => 'id'],
                         ['key' => 'field_5d385aa9fec49',     'label' => 'Reverse Layout?', 'name' => 'reverse_layout',  'type' => 'true_false', 'instructions' => 'Image on the left, text on the right.'],
                     ],
@@ -177,17 +177,9 @@ acf_add_local_field_group([
                             'name'       => 'gallery_images',
                             'type'       => 'repeater',
                             'layout'     => 'table',
+                            'instructions' => 'Add up to 5 images. The masonry layout is fixed: wide · tall-right · tall-left · small · wide.',
                             'sub_fields' => [
                                 ['key' => 'field_v4_gallery_image', 'label' => 'Image', 'name' => 'image', 'type' => 'image', 'return_format' => 'id'],
-                                [
-                                    'key'           => 'field_v4_gallery_span',
-                                    'label'         => 'Span',
-                                    'name'          => 'span',
-                                    'type'          => 'select',
-                                    'choices'       => ['normal' => 'Normal', 'wide' => 'Wide', 'tall' => 'Tall'],
-                                    'default_value' => 'normal',
-                                    'allow_null'    => 0,
-                                ],
                             ],
                         ],
                     ],

@@ -133,7 +133,7 @@ get_header();
       <section class="block block--text">
         <span class="block__accent"></span>
         <?php if ($heading) : ?><h2 class="block__heading"><?php echo esc_html($heading); ?></h2><?php endif; ?>
-        <?php if ($body) : ?><div class="block__body"><?php echo wpautop(esc_html($body)); ?></div><?php endif; ?>
+        <?php if ($body) : ?><div class="block__body"><?php echo wp_kses_post($body); ?></div><?php endif; ?>
       </section>
 
       <?php elseif (get_row_layout() === 'text_and_image') :
@@ -151,7 +151,7 @@ get_header();
         <div class="split__content">
           <div class="split__accent"></div>
           <?php if ($heading) : ?><h2 class="split__heading"><?php echo esc_html($heading); ?></h2><?php endif; ?>
-          <?php if ($copy) : ?><div class="split__body"><?php echo wpautop(esc_html($copy)); ?></div><?php endif; ?>
+          <?php if ($copy) : ?><div class="split__body"><?php echo wp_kses_post(wpautop($copy)); ?></div><?php endif; ?>
         </div>
       </section>
 
@@ -161,10 +161,8 @@ get_header();
       ?>
       <!-- Block · Full-width Image -->
       <?php if ($img_url) : ?>
-      <section class="block block--gallery">
-        <div class="masonry-grid">
-          <div class="masonry-item masonry-item--wide" style="background-image:url('<?php echo esc_url($img_url); ?>')"></div>
-        </div>
+      <section class="block block--image">
+        <img src="<?php echo esc_url($img_url); ?>" alt="" class="block__img" loading="lazy" />
       </section>
       <?php endif; ?>
 
@@ -179,11 +177,9 @@ get_header();
           <?php foreach ($gallery_images as $gi) :
             $img_id  = $gi['image'];
             $img_url = $img_id ? wp_get_attachment_image_url($img_id, 'cs-hero') : '';
-            $span    = $gi['span'] ?? 'normal';
             if (!$img_url) continue;
           ?>
-          <div class="masonry-item<?php echo $span !== 'normal' ? ' masonry-item--' . esc_attr($span) : ''; ?>"
-               style="background-image:url('<?php echo esc_url($img_url); ?>')"></div>
+          <div class="masonry-item" style="background-image:url('<?php echo esc_url($img_url); ?>')"></div>
           <?php endforeach; ?>
         </div>
       </section>

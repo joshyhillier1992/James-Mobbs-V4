@@ -1646,6 +1646,15 @@ body.is-loaded .nav-back {
 }
 
 
+/* ── Block: Single Full-width Image ─────────────── */
+.block--image .block__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-card);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+}
+
 /* ── Block 5: Gallery Grid ───────────────────────── */
 
 .block--gallery .gallery-grid {
