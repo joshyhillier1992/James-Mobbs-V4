@@ -70,7 +70,7 @@ body.site {
   top: -15%;
   left: -8%;
   right: -8%;
-  height: 75vh;           /* stops well before mid-page */
+  height: 75vh;
   pointer-events: none;
   background-size: cover;
   background-position: center top;
@@ -78,20 +78,22 @@ body.site {
   transform: scale(1.2);
   opacity: 0;
   z-index: 0;
-  transition: opacity 0.5s ease;
-  /* fade out at the bottom so there's no hard edge */
-  -webkit-mask-image: linear-gradient(to bottom, black 30%, transparent 100%);
-  mask-image: linear-gradient(to bottom, black 30%, transparent 100%);
+  transition: opacity 0.6s ease;
+  /* Concentrate glow in the upper zone; transparent well before mid-page */
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 15%, transparent 55%);
+  mask-image: linear-gradient(to bottom, black 0%, black 15%, transparent 55%);
 }
 
 .site__gradient.is-visible {
   opacity: 0.22;
 }
 
-/* Project pages: hero image is injected via inline style on .site__gradient;
-   fade it in once nav.js marks the body as loaded. */
+/* Project pages: hero image injected into .site__gradient by functions.php.
+   Crank saturation/brightness so the hue actually reads; the tightened mask
+   above keeps it from bleeding into the text content area. */
 body.single-case_study.is-loaded .site__gradient {
-  opacity: 0.22;
+  opacity: 0.65;
+  filter: blur(60px) saturate(220%) brightness(0.55);
 }
 
 
@@ -1448,7 +1450,14 @@ body.is-loaded .nav-back {
    All blocks below inherit from those two variables.
 ═══════════════════════════════════════════════════════════ */
 
-.project-page { padding-top: var(--space-3); }
+/* z-index: 1 creates a stacking context that sits above .site__gradient
+   (z-index: 0), so the gradient renders as a true background glow rather
+   than compositing on top of page text. */
+.project-page {
+  padding-top: var(--space-3);
+  position: relative;
+  z-index: 1;
+}
 
 /* Shared block base */
 .block { margin-bottom: var(--section-gap); }
