@@ -23,20 +23,24 @@
   if ('IntersectionObserver' in window) {
     const io = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-revealed');
-        io.unobserve(entry.target);
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-revealed');
+          io.unobserve(entry.target);
+        } else if (entry.boundingClientRect.bottom < 0) {
+          // Fast-scroll (Mac momentum) fired the observer AFTER the element
+          // passed — reveal instantly with no transition so there's no stale
+          // invisible content sitting above the viewport.
+          entry.target.style.transition = 'none';
+          entry.target.classList.add('is-revealed');
+          io.unobserve(entry.target);
+        }
       });
-    }, { threshold: 0.07, rootMargin: '0px 0px -36px 0px' });
+    // Pre-fire 80px before the element enters the viewport so even brisk
+    // trackpad scrolling sees the animation start before the content appears.
+    }, { threshold: 0, rootMargin: '0px 0px 80px 0px' });
 
     document.querySelectorAll(SELECTORS).forEach((el) => {
-      /* Don't double-animate elements already covered by the page-load intro */
       if (el.closest('.hero-carousel') || el.closest('.case-studies')) return;
-
-      const idx = Array.from(el.parentElement.children).indexOf(el);
-      const delay = Math.min(idx * 0.09, 0.45);
-      if (delay > 0) el.style.transitionDelay = delay + 's';
-
       el.classList.add('will-reveal');
       io.observe(el);
     });

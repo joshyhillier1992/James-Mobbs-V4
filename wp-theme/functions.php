@@ -44,15 +44,21 @@ add_action('wp_enqueue_scripts', function () {
     wp_enqueue_script('james-mobbs-nav',    $uri . '/assets/js/nav.js',    [],           $ver, true);
     wp_enqueue_script('james-mobbs-scroll', $uri . '/assets/js/scroll.js', [],           $ver, true);
 
-    // Per-project colour variables on single case study pages
+    // Per-project variables: accent colour + ambient hero image glow
     if (is_singular('case_study')) {
-        $primary = get_field('header_colour');
-        $accent  = get_field('background_colour');
-        if ($primary || $accent) {
-            $css = ':root{';
-            if ($primary) $css .= '--project-primary:' . esc_attr($primary) . ';';
-            if ($accent)  $css .= '--project-accent:'  . esc_attr($accent)  . ';';
-            $css .= '}';
+        $primary  = get_field('header_colour');
+        $hero_id  = get_field('homepage_image');
+        $hero_url = $hero_id ? wp_get_attachment_image_url($hero_id, 'cs-hero') : '';
+        $css = '';
+        if ($primary) {
+            $css .= ':root{--project-primary:' . esc_attr($primary) . ';}';
+        }
+        if ($hero_url) {
+            // Inject hero image into the fixed gradient element so each project
+            // gets a unique ambient glow driven by its own imagery, not a manual colour pick.
+            $css .= '.site__gradient{background-image:url(' . esc_url($hero_url) . ');}';
+        }
+        if ($css) {
             wp_add_inline_style('james-mobbs-style', $css);
         }
     }

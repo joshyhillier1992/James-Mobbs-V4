@@ -167,7 +167,6 @@ get_header();
       ?>
       <!-- Block · Text / Prose -->
       <section class="block block--text">
-        <span class="block__accent"></span>
         <?php if ($heading) : ?><h2 class="block__heading"><?php echo esc_html($heading); ?></h2><?php endif; ?>
         <?php if ($body)    : ?><div class="block__body"><?php echo wp_kses_post($body); ?></div><?php endif; ?>
       </section>
@@ -185,7 +184,6 @@ get_header();
           <div class="split__media" style="background-image:url('<?php echo esc_url($img_url); ?>')"></div>
         <?php endif; ?>
         <div class="split__content">
-          <div class="split__accent"></div>
           <?php if ($heading) : ?><h2 class="split__heading"><?php echo esc_html($heading); ?></h2><?php endif; ?>
           <?php if ($copy)    : ?><div class="split__body"><?php echo wp_kses_post(wpautop($copy)); ?></div><?php endif; ?>
         </div>

@@ -11,22 +11,8 @@ acf_add_local_field_group([
     'fields'   => [
 
         // ── Colour ──────────────────────────────────────────
-        ['key' => 'field_5d87cebf04854', 'label' => 'Header Colour',     'name' => 'header_colour',     'type' => 'color_picker'],
-        ['key' => 'field_5d3a3be68b31d', 'label' => 'Change colours?',   'name' => 'change_colours',    'type' => 'true_false'],
-        [
-            'key'                => 'field_5d3a3aa38be6c',
-            'label'              => 'Background Colour',
-            'name'               => 'background_colour',
-            'type'               => 'color_picker',
-            'conditional_logic'  => [[['field' => 'field_5d3a3be68b31d', 'operator' => '==', 'value' => '1']]],
-        ],
-        [
-            'key'               => 'field_5d3a3ad78be6d',
-            'label'             => 'Text Colour',
-            'name'              => 'text_colour',
-            'type'              => 'color_picker',
-            'conditional_logic' => [[['field' => 'field_5d3a3be68b31d', 'operator' => '==', 'value' => '1']]],
-        ],
+        ['key' => 'field_5d87cebf04854', 'label' => 'Accent Colour', 'name' => 'header_colour', 'type' => 'color_picker',
+         'instructions' => 'Drives the project highlight colour (tags, underline, quote marks). Leave blank for the default orange.'],
 
         // ── Taxonomy / tags ──────────────────────────────────
         [

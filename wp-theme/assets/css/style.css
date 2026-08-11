@@ -26,7 +26,7 @@
        --gutter:      page edge margins, scales 20px → 64px
        --section-gap: vertical space between major sections, 28px → 48px */
   --gutter:      clamp(1.25rem, 5vw, 4rem);
-  --section-gap: clamp(1.75rem, 4vw, 3rem);
+  --section-gap: clamp(1.5rem, 3vw, 2.5rem);
 
   /* Type scale */
   --step--1: 0.85rem;
@@ -85,6 +85,12 @@ body.site {
 }
 
 .site__gradient.is-visible {
+  opacity: 0.22;
+}
+
+/* Project pages: hero image is injected via inline style on .site__gradient;
+   fade it in once nav.js marks the body as loaded. */
+body.single-case_study.is-loaded .site__gradient {
   opacity: 0.22;
 }
 
@@ -1442,16 +1448,16 @@ body.is-loaded .nav-back {
    All blocks below inherit from those two variables.
 ═══════════════════════════════════════════════════════════ */
 
-.project-page { padding-top: var(--space-4); }
+.project-page { padding-top: var(--space-3); }
 
 /* Shared block base */
 .block { margin-bottom: var(--section-gap); }
 
 .block__label {
-  font-size: 0.72rem;
+  font-size: 0.70rem;
   text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.30);
   display: block;
   margin-bottom: var(--space-1);
 }
@@ -1469,9 +1475,9 @@ body.is-loaded .nav-back {
 /* ── Block 1: Hero ───────────────────────────────── */
 
 .block--hero {
-  padding: var(--space-4) 0 var(--space-4);
+  padding: var(--space-3) 0 var(--space-3);
   border-bottom: 1px solid rgba(255,255,255,0.06);
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-3);
   position: relative;
 }
 
@@ -1568,23 +1574,14 @@ body.is-loaded .nav-back {
 .block--text { max-width: 740px; }
 
 .block--text .block__body {
-  font-size: 1.05rem;
+  font-size: 1rem;
+  font-weight: 300;
   line-height: 1.85;
-  color: rgba(255,255,255,0.6);
+  color: rgba(255,255,255,0.62);
 }
 .block--text .block__body p { margin: 0 0 var(--space-2); }
 .block--text .block__body p:last-child { margin-bottom: 0; }
 .block--text .block__body strong { color: rgba(255,255,255,0.88); font-weight: 500; }
-
-.block--text .block__accent {
-  display: inline-block;
-  margin-bottom: var(--space-2);
-  width: 48px;
-  height: 3px;
-  border-radius: 999px;
-  background: var(--project-primary, var(--accent-orange));
-}
-
 
 /* ── Block 4: Split (50 / 50) ────────────────────── */
 
@@ -1627,15 +1624,9 @@ body.is-loaded .nav-back {
 .split__body {
   margin: 0;
   font-size: var(--step-0);
+  font-weight: 300;
   line-height: 1.8;
   color: var(--text-muted);
-}
-
-.split__accent {
-  width: 48px;
-  height: 3px;
-  border-radius: 999px;
-  background: var(--project-primary, var(--accent-orange));
 }
 
 @media (max-width: 768px) {
@@ -1724,7 +1715,7 @@ body.is-loaded .nav-back {
   border-radius: var(--radius-card);
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.07);
-  padding: var(--space-5) var(--space-4);
+  padding: var(--space-4) var(--space-3);
   position: relative;
   overflow: hidden;
 }
@@ -1782,8 +1773,8 @@ body.is-loaded .nav-back {
 
 .testimonial__name {
   font-size: var(--step-0);
-  font-weight: 500;
-  color: rgba(255,255,255,0.82);
+  font-weight: 400;
+  color: rgba(255,255,255,0.75);
   margin: 0;
 }
 
