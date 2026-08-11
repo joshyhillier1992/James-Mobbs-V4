@@ -1824,12 +1824,27 @@ body.is-loaded .nav-back {
   justify-content: center;
   flex-direction: column;
   gap: var(--space-2);
-  background: linear-gradient(135deg,
+  background-image: linear-gradient(135deg,
     #0d0d20,
     color-mix(in srgb, var(--project-primary, #ff7b2c) 18%, #0d0d20)
   );
+  background-size: cover;
+  background-position: center;
   cursor: pointer;
+  overflow: hidden;
 }
+
+/* Dark scrim so the play button reads on any thumbnail */
+.video-placeholder::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.34);
+  transition: background 0.22s;
+  pointer-events: none;
+}
+.video-placeholder:hover::before { background: rgba(0, 0, 0, 0.50); }
+.video-placeholder > * { position: relative; z-index: 1; }
 
 .video-play-btn {
   width: 72px;

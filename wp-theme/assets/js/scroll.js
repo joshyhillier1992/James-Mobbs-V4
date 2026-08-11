@@ -79,7 +79,28 @@
     if (statsBar) counterIO.observe(statsBar);
   }
 
-  /* ── 3. Glass spotlight — cursor-following radial glow ─────────── */
+  /* ── 3. Video thumbnail — click to load autoplay embed ─────────── */
+  document.querySelectorAll('.js-video-thumb').forEach((thumb) => {
+    thumb.addEventListener('click', () => {
+      const src = thumb.dataset.src;
+      if (!src) return;
+      try {
+        const url = new URL(src);
+        url.searchParams.set('autoplay', '1');
+        url.searchParams.set('controls', '1');
+        const iframe = document.createElement('iframe');
+        iframe.src = url.toString();
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('allowfullscreen', '');
+        iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture');
+        const wrap = thumb.closest('.video-wrap');
+        wrap.innerHTML = '';
+        wrap.appendChild(iframe);
+      } catch (e) { /* malformed URL — fall through */ }
+    });
+  });
+
+  /* ── 4. Glass spotlight — cursor-following radial glow ─────────── */
   document.querySelectorAll(
     '.case-card, .stats-bar, .contact-section, .nav-back, .main-nav'
   ).forEach((card) => {

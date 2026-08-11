@@ -1,24 +1,19 @@
 <?php
 defined('ABSPATH') || exit;
 
-$email       = function_exists('get_field') ? get_field('email_address', 'option') : 'hello@jamesmobbs.com';
-$email       = $email ?: 'hello@jamesmobbs.com';
+$email    = function_exists('get_field') ? get_field('email_address', 'option') : 'hello@jamesmobbs.com';
+$email    = $email ?: 'hello@jamesmobbs.com';
 
-// Hero meta
-$tags        = get_field('tags') ?: '';
-$client      = get_field('client') ?: '';
-$year        = get_field('year') ?: '';
-$role        = get_field('role') ?: '';
-$duration    = get_field('duration') ?: '';
-$tag_list    = array_filter(array_map('trim', explode(',', $tags)));
+$tags     = get_field('tags') ?: '';
+$client   = get_field('client') ?: '';
+$year     = get_field('year') ?: '';
+$role     = get_field('role') ?: '';
+$duration = get_field('duration') ?: '';
+$tag_list = array_filter(array_map('trim', explode(',', $tags)));
 
-// Project stats
-$stats       = get_field('stats') ?: [];
+$stats   = get_field('stats')   ?: [];
+$credits = get_field('credits') ?: [];
 
-// Credits
-$credits     = get_field('credits') ?: [];
-
-// Related projects (3 most recent that aren't this post)
 $related_query = new WP_Query([
     'post_type'      => 'case_study',
     'posts_per_page' => 3,
@@ -27,6 +22,9 @@ $related_query = new WP_Query([
     'order'          => 'ASC',
     'no_found_rows'  => true,
 ]);
+
+// All flexible content blocks as a flat array so we can buffer consecutive images
+$blocks = get_field('case_studies') ?: [];
 
 get_header();
 ?>
@@ -69,16 +67,54 @@ get_header();
 
 
   <!-- ── FLEXIBLE CONTENT BLOCKS ────────────────────── -->
-  <?php if (have_rows('case_studies')) : ?>
-    <?php while (have_rows('case_studies')) : the_row(); ?>
+  <?php
+  $img_buf = [];
 
-      <?php if (get_row_layout() === 'hero') :
-        $img_id     = get_sub_field('hero_image');
-        $img_mob_id = get_sub_field('hero_image_mobile');
-        $img_url    = $img_id     ? wp_get_attachment_image_url($img_id, 'cs-hero')     : '';
-        $mob_url    = $img_mob_id ? wp_get_attachment_image_url($img_mob_id, 'cs-hero') : $img_url;
+  // Flush buffered consecutive images.
+  // Exactly 5 → designed masonry grid. Any other count → individual full-width blocks.
+  // Runs > 5 are split: first 5 as masonry, remainder recurse.
+  $flush_images = function (array $imgs) use (&$flush_images) {
+      if (empty($imgs)) return;
+      $n = count($imgs);
+      if ($n > 5) {
+          $flush_images(array_slice($imgs, 0, 5));
+          $flush_images(array_slice($imgs, 5));
+          return;
+      }
+      if ($n === 5) {
+          echo '<section class="block block--gallery"><div class="masonry-grid">';
+          foreach ($imgs as $url) {
+              echo '<div class="masonry-item" style="background-image:url(\'' . esc_url($url) . '\')"></div>';
+          }
+          echo '</div></section>';
+      } else {
+          foreach ($imgs as $url) {
+              echo '<section class="block block--image"><img src="' . esc_url($url) . '" alt="" class="block__img" loading="lazy"></section>';
+          }
+      }
+  };
+
+  foreach ($blocks as $block) :
+      $layout = $block['acf_fc_layout'] ?? '';
+
+      // Accumulate consecutive image blocks — don't render them yet
+      if ($layout === 'image') :
+          $img_id  = $block['image'] ?? 0;
+          $img_url = $img_id ? wp_get_attachment_image_url($img_id, 'cs-hero') : '';
+          if ($img_url) $img_buf[] = $img_url;
+          continue;
+      endif;
+
+      // Flush any buffered images before rendering the next non-image block
+      if (!empty($img_buf)) { $flush_images($img_buf); $img_buf = []; }
+
+      if ($layout === 'hero') :
+          $img_id     = $block['hero_image']        ?? 0;
+          $img_mob_id = $block['hero_image_mobile'] ?? 0;
+          $img_url    = $img_id     ? wp_get_attachment_image_url($img_id, 'cs-hero')     : '';
+          $mob_url    = $img_mob_id ? wp_get_attachment_image_url($img_mob_id, 'cs-hero') : $img_url;
       ?>
-      <!-- Block · Image Carousel (hero images) -->
+      <!-- Block · Hero Image -->
       <section class="block block--carousel">
         <div class="hero-carousel" aria-label="Project images" data-no-autoplay>
           <div class="carousel__viewport">
@@ -99,8 +135,8 @@ get_header();
         </div>
       </section>
 
-      <?php elseif (get_row_layout() === 'carousel') :
-        $carousel_images = get_sub_field('carousel_images') ?: [];
+      <?php elseif ($layout === 'carousel') :
+          $carousel_images = $block['carousel_images'] ?: [];
       ?>
       <!-- Block · Image Carousel -->
       <section class="block block--carousel">
@@ -108,14 +144,14 @@ get_header();
           <div class="carousel__viewport">
             <div class="carousel__track" id="js-track">
               <?php foreach ($carousel_images as $ci => $row) :
-                $img_id  = $row['image'];
-                $img_url = $img_id ? wp_get_attachment_image_url($img_id, 'cs-hero') : '';
-                if (!$img_url) continue;
+                $ci_id  = $row['image'] ?? 0;
+                $ci_url = $ci_id ? wp_get_attachment_image_url($ci_id, 'cs-hero') : '';
+                if (!$ci_url) continue;
               ?>
               <article class="carousel__slide<?php echo $ci === 0 ? ' is-active' : ''; ?>" data-index="<?php echo $ci; ?>">
                 <svg class="carousel__sweep" aria-hidden="true"><path class="carousel__sweep-cw"/><path class="carousel__sweep-ccw"/></svg>
                 <div class="carousel__frame">
-                  <div class="carousel__media" style="background-image:url('<?php echo esc_url($img_url); ?>')"></div>
+                  <div class="carousel__media" style="background-image:url('<?php echo esc_url($ci_url); ?>')"></div>
                   <div class="carousel__media-fade"></div>
                 </div>
               </article>
@@ -125,23 +161,23 @@ get_header();
         </div>
       </section>
 
-      <?php elseif (get_row_layout() === 'standfirst') :
-        $heading = get_sub_field('block_heading') ?: '';
-        $body    = get_sub_field('standfirst') ?: '';
+      <?php elseif ($layout === 'standfirst') :
+          $heading = $block['block_heading'] ?? '';
+          $body    = $block['standfirst']    ?? '';
       ?>
       <!-- Block · Text / Prose -->
       <section class="block block--text">
         <span class="block__accent"></span>
         <?php if ($heading) : ?><h2 class="block__heading"><?php echo esc_html($heading); ?></h2><?php endif; ?>
-        <?php if ($body) : ?><div class="block__body"><?php echo wp_kses_post($body); ?></div><?php endif; ?>
+        <?php if ($body)    : ?><div class="block__body"><?php echo wp_kses_post($body); ?></div><?php endif; ?>
       </section>
 
-      <?php elseif (get_row_layout() === 'text_and_image') :
-        $heading  = get_sub_field('split_heading') ?: '';
-        $copy     = get_sub_field('copy') ?: '';
-        $img_id   = get_sub_field('image');
-        $img_url  = $img_id ? wp_get_attachment_image_url($img_id, 'cs-hero') : '';
-        $reversed = get_sub_field('reverse_layout');
+      <?php elseif ($layout === 'text_and_image') :
+          $heading  = $block['split_heading']  ?? '';
+          $copy     = $block['copy']           ?? '';
+          $img_id   = $block['image']          ?? 0;
+          $img_url  = $img_id ? wp_get_attachment_image_url($img_id, 'cs-hero') : '';
+          $reversed = $block['reverse_layout'] ?? false;
       ?>
       <!-- Block · Split 50/50 -->
       <section class="block block--split<?php echo $reversed ? ' is-reversed' : ''; ?>">
@@ -151,51 +187,53 @@ get_header();
         <div class="split__content">
           <div class="split__accent"></div>
           <?php if ($heading) : ?><h2 class="split__heading"><?php echo esc_html($heading); ?></h2><?php endif; ?>
-          <?php if ($copy) : ?><div class="split__body"><?php echo wp_kses_post(wpautop($copy)); ?></div><?php endif; ?>
+          <?php if ($copy)    : ?><div class="split__body"><?php echo wp_kses_post(wpautop($copy)); ?></div><?php endif; ?>
         </div>
       </section>
 
-      <?php elseif (get_row_layout() === 'image') :
-        $img_id  = get_sub_field('image');
-        $img_url = $img_id ? wp_get_attachment_image_url($img_id, 'cs-hero') : '';
+      <?php elseif ($layout === 'video') :
+          $video_url     = $block['video_url']     ?? '';
+          $video_img_id  = $block['video_image']   ?? 0;
+          $video_img_url = $video_img_id ? wp_get_attachment_image_url($video_img_id, 'cs-hero') : '';
+          $caption       = $block['video_caption'] ?? '';
+          // Extract the embed iframe src so JS can build an autoplay URL on click
+          $video_src = '';
+          if ($video_url && preg_match('/src=["\']([^"\']+)["\']/', $video_url, $m)) {
+              $video_src = $m[1];
+          }
       ?>
-      <!-- Block · Full-width Image -->
-      <?php if ($img_url) : ?>
-      <section class="block block--image">
-        <img src="<?php echo esc_url($img_url); ?>" alt="" class="block__img" loading="lazy" />
-      </section>
-      <?php endif; ?>
-
-      <?php elseif (get_row_layout() === 'gallery') :
-        $gallery_images = get_sub_field('gallery_images') ?: [];
-      ?>
-      <!-- Block · Masonry Gallery -->
-      <?php if (!empty($gallery_images)) : ?>
-      <section class="block block--gallery">
-        <p class="block__label">Gallery</p>
-        <div class="masonry-grid">
-          <?php foreach ($gallery_images as $gi) :
-            $img_id  = $gi['image'];
-            $img_url = $img_id ? wp_get_attachment_image_url($img_id, 'cs-hero') : '';
-            if (!$img_url) continue;
-          ?>
-          <div class="masonry-item" style="background-image:url('<?php echo esc_url($img_url); ?>')"></div>
-          <?php endforeach; ?>
+      <!-- Block · Video -->
+      <section class="block block--video">
+        <?php if ($caption) : ?><p class="block__label"><?php echo esc_html($caption); ?></p><?php endif; ?>
+        <div class="video-wrap">
+          <?php if ($video_img_url) : ?>
+          <div class="video-placeholder<?php echo $video_src ? ' js-video-thumb' : ''; ?>"
+               <?php if ($video_src) : ?>data-src="<?php echo esc_attr($video_src); ?>"<?php endif; ?>
+               style="background-image:url('<?php echo esc_url($video_img_url); ?>')">
+            <?php if ($video_src) : ?>
+            <button class="video-play-btn" aria-label="Play video">
+              <svg width="22" height="26" viewBox="0 0 22 26" aria-hidden="true">
+                <path d="M0 0L22 13L0 26V0Z" fill="white"/>
+              </svg>
+            </button>
+            <?php endif; ?>
+          </div>
+          <?php elseif ($video_url) : ?>
+          <div class="video-embed"><?php echo $video_url; ?></div>
+          <?php endif; ?>
         </div>
       </section>
-      <?php endif; ?>
 
-      <?php elseif (get_row_layout() === 'testimonial') :
-        $quote      = get_sub_field('testimonal') ?: '';
-        $credit     = get_sub_field('credit') ?: '';
-        $avatar_id  = get_sub_field('avatar');
-        $avatar_url = $avatar_id ? wp_get_attachment_image_url($avatar_id, 'thumbnail') : '';
-        // Initials fallback from credit text
-        $initials = '';
-        if ($credit) {
-            $words = array_filter(explode(' ', $credit));
-            $initials = strtoupper(substr($words[0] ?? '', 0, 1) . substr(end($words) ?? '', 0, 1));
-        }
+      <?php elseif ($layout === 'testimonial') :
+          $quote      = $block['testimonal'] ?? '';
+          $credit     = $block['credit']     ?? '';
+          $avatar_id  = $block['avatar']     ?? 0;
+          $avatar_url = $avatar_id ? wp_get_attachment_image_url($avatar_id, 'thumbnail') : '';
+          $initials   = '';
+          if ($credit) {
+              $words    = array_filter(explode(' ', $credit));
+              $initials = strtoupper(substr($words[0] ?? '', 0, 1) . substr(end($words) ?? '', 0, 1));
+          }
       ?>
       <!-- Block · Testimonial -->
       <section class="block block--testimonial">
@@ -216,31 +254,30 @@ get_header();
         </blockquote>
       </section>
 
-      <?php elseif (get_row_layout() === 'video') :
-        $video_url     = get_sub_field('video_url') ?: '';
-        $video_img_id  = get_sub_field('video_image');
-        $video_img_url = $video_img_id ? wp_get_attachment_image_url($video_img_id, 'cs-hero') : '';
-        $caption       = get_sub_field('video_caption') ?: '';
+      <?php elseif ($layout === 'gallery') :
+          $gallery_images = $block['gallery_images'] ?: [];
       ?>
-      <!-- Block · Video -->
-      <section class="block block--video">
-        <?php if ($caption) : ?><p class="block__label"><?php echo esc_html($caption); ?></p><?php endif; ?>
-        <div class="video-wrap">
-          <?php if ($video_url) :
-            // ACF oembed returns an iframe HTML string
-            echo $video_url;
-          elseif ($video_img_url) : ?>
-            <div class="video-placeholder" style="background-image:url('<?php echo esc_url($video_img_url); ?>')">
-              <span class="video-caption"><?php echo esc_html($caption); ?></span>
-            </div>
-          <?php endif; ?>
+      <!-- Block · Masonry Gallery (manually added via ACF) -->
+      <?php if (!empty($gallery_images)) : ?>
+      <section class="block block--gallery">
+        <div class="masonry-grid">
+          <?php foreach ($gallery_images as $gi) :
+            $gi_id  = $gi['image'] ?? 0;
+            $gi_url = $gi_id ? wp_get_attachment_image_url($gi_id, 'cs-hero') : '';
+            if (!$gi_url) continue;
+          ?>
+          <div class="masonry-item" style="background-image:url('<?php echo esc_url($gi_url); ?>')"></div>
+          <?php endforeach; ?>
         </div>
       </section>
+      <?php endif; ?>
 
       <?php endif; ?>
 
-    <?php endwhile; ?>
-  <?php endif; ?>
+  <?php endforeach; ?>
+
+  <?php // Flush any images that were still buffered at end of blocks
+  if (!empty($img_buf)) { $flush_images($img_buf); } ?>
 
 
   <!-- ── BLOCK · PROJECT STATS ──────────────────────── -->
@@ -278,9 +315,9 @@ get_header();
     <p class="block__label">More Work</p>
     <div class="related-grid">
       <?php while ($related_query->have_posts()) : $related_query->the_post();
-        $rel_img_id  = get_field('homepage_image');
-        $rel_img_url = $rel_img_id ? wp_get_attachment_image_url($rel_img_id, 'cs-card') : '';
-        $rel_tags    = get_field('tags') ?: '';
+        $rel_img_id   = get_field('homepage_image');
+        $rel_img_url  = $rel_img_id ? wp_get_attachment_image_url($rel_img_id, 'cs-card') : '';
+        $rel_tags     = get_field('tags') ?: '';
         $rel_tag_list = array_filter(array_map('trim', explode(',', $rel_tags)));
         $rel_type     = $rel_tag_list ? reset($rel_tag_list) : '';
       ?>
