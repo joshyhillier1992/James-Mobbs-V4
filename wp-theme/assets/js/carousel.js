@@ -70,10 +70,15 @@
   function setAmbient(realIndex) {
     const img = SLIDES_DATA[realIndex].img;
     if (ambient) ambient.classList.remove('is-visible');
-    if (pageAmbient) pageAmbient.classList.remove('is-visible');
+    // On case-study pages (noAutoplay) the PHP already set the correct hero image
+    // via wp_add_inline_style — don't overwrite it with homepage slide data.
+    if (pageAmbient && !noAutoplay) pageAmbient.classList.remove('is-visible');
     setTimeout(() => {
       if (ambient) { ambient.style.backgroundImage = `url(${img})`; ambient.classList.add('is-visible'); }
-      if (pageAmbient) { pageAmbient.style.backgroundImage = `url(${img})`; pageAmbient.classList.add('is-visible'); }
+      if (pageAmbient) {
+        if (!noAutoplay) pageAmbient.style.backgroundImage = `url(${img})`;
+        pageAmbient.classList.add('is-visible');
+      }
     }, 220);
   }
 
@@ -252,7 +257,10 @@
     moveTo(1, false);
     const img = SLIDES_DATA[0].img;
     if (ambient) { ambient.style.backgroundImage = `url(${img})`; ambient.classList.add('is-visible'); }
-    if (pageAmbient) { pageAmbient.style.backgroundImage = `url(${img})`; pageAmbient.classList.add('is-visible'); }
+    if (pageAmbient) {
+      if (!noAutoplay) pageAmbient.style.backgroundImage = `url(${img})`;
+      pageAmbient.classList.add('is-visible');
+    }
     resetTimer();
     requestAnimationFrame(() => document.body.classList.add('is-loaded'));
   });

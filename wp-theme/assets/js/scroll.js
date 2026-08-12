@@ -18,6 +18,8 @@
     '.block--related',
     '.section-title',
     '.site-colophon',
+    '.work-card',
+    '.work-archive__header',
   ].join(',');
 
   if ('IntersectionObserver' in window) {

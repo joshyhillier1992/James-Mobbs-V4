@@ -266,6 +266,33 @@ acf_add_local_field_group([
         ['key' => 'field_5d83bc493ea56', 'label' => 'Article Title',    'name' => 'article_title',    'type' => 'text'],
         ['key' => 'field_5d83bc613ea57', 'label' => 'Article Subtitle', 'name' => 'article_subtitle', 'type' => 'text'],
         [
+            'key'        => 'field_v4_about_services',
+            'label'      => 'Services',
+            'name'       => 'about_services',
+            'type'       => 'repeater',
+            'layout'     => 'block',
+            'instructions' => 'Each service shown in the "What I Do" grid.',
+            'sub_fields' => [
+                ['key' => 'field_v4_svc_title', 'label' => 'Title',       'name' => 'service_title',       'type' => 'text'],
+                ['key' => 'field_v4_svc_desc',  'label' => 'Description', 'name' => 'service_description', 'type' => 'textarea', 'rows' => 3],
+            ],
+        ],
+        ['key' => 'field_v4_about_disciplines',  'label' => 'Disciplines',         'name' => 'about_disciplines',  'type' => 'textarea', 'rows' => 6, 'instructions' => 'One discipline per line.', 'new_lines' => ''],
+        ['key' => 'field_v4_about_availability', 'label' => 'Currently Available', 'name' => 'about_availability', 'type' => 'textarea', 'rows' => 4, 'instructions' => 'One item per line.',       'new_lines' => ''],
+        [
+            'key'        => 'field_v4_about_stats',
+            'label'      => 'Stats',
+            'name'       => 'about_stats',
+            'type'       => 'repeater',
+            'layout'     => 'table',
+            'max'        => 6,
+            'instructions' => 'Numbers shown in the stats bar.',
+            'sub_fields' => [
+                ['key' => 'field_v4_about_stat_num',   'label' => 'Number', 'name' => 'stat_number', 'type' => 'text', 'wrapper' => ['width' => '30']],
+                ['key' => 'field_v4_about_stat_label', 'label' => 'Label',  'name' => 'stat_label',  'type' => 'text', 'wrapper' => ['width' => '70']],
+            ],
+        ],
+        [
             'key'        => 'field_5d73d1cc86a8a',
             'label'      => 'Featured Articles',
             'name'       => 'featured_articles',

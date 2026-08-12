@@ -31,14 +31,6 @@ if (!$featured_query->have_posts()) {
     ]);
 }
 
-$all_query = new WP_Query([
-    'post_type'      => 'case_study',
-    'posts_per_page' => -1,
-    'orderby'        => 'menu_order',
-    'order'          => 'ASC',
-    'no_found_rows'  => true,
-]);
-
 // IDs already shown in case studies grid — exclude from the list below
 $featured_ids = [];
 if ($featured_query->have_posts()) {
@@ -50,11 +42,11 @@ if ($featured_query->have_posts()) {
 // Remaining projects for the "More Work" list
 $more_query = new WP_Query([
     'post_type'      => 'case_study',
-    'posts_per_page' => -1,
+    'posts_per_page' => 5,
     'orderby'        => 'menu_order',
     'order'          => 'ASC',
     'post__not_in'   => $featured_ids,
-    'no_found_rows'  => true,
+    'no_found_rows'  => false,
 ]);
 
 // Contact info from options
@@ -147,7 +139,8 @@ get_header();
               $excerpt  = get_field('homepage_excerpt') ?: '';
               $is_wide  = ($card_index === 0);
       ?>
-      <a href="<?php the_permalink(); ?>" class="case-card<?php echo $is_wide ? ' case-card--wide' : ''; ?>">
+      <a href="<?php the_permalink(); ?>" class="case-card<?php echo $is_wide ? ' case-card--wide' : ''; ?>"
+         <?php if ($img_url) : ?>style="--card-bg:url('<?php echo esc_url($img_url); ?>')"<?php endif; ?>>
         <?php if ($img_url) : ?>
           <div class="case-card__media" style="background-image:url('<?php echo esc_url($img_url); ?>')"></div>
         <?php endif; ?>
@@ -208,6 +201,13 @@ get_header();
         wp_reset_postdata();
         ?>
       </ol>
+
+      <div class="projects__view-all">
+        <a href="<?php echo esc_url(get_post_type_archive_link('case_study')); ?>" class="projects__view-all__link">
+          <span class="projects__view-all__title">More</span>
+          <span class="projects__view-all__arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
     </div>
   </section>
   <?php endif; ?>

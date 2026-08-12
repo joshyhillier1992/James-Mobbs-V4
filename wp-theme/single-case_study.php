@@ -319,7 +319,8 @@ get_header();
         $rel_tag_list = array_filter(array_map('trim', explode(',', $rel_tags)));
         $rel_type     = $rel_tag_list ? reset($rel_tag_list) : '';
       ?>
-      <a href="<?php the_permalink(); ?>" class="related-card">
+      <a href="<?php the_permalink(); ?>" class="related-card"
+         <?php if ($rel_img_url) : ?>style="--card-bg:url('<?php echo esc_url($rel_img_url); ?>')"<?php endif; ?>>
         <?php if ($rel_img_url) : ?>
           <div class="related-card__thumb" style="background-image:url('<?php echo esc_url($rel_img_url); ?>')"></div>
         <?php endif; ?>

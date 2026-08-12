@@ -89,11 +89,17 @@ body.site {
 }
 
 /* Project pages: hero image injected into .site__gradient by functions.php.
-   Crank saturation/brightness so the hue actually reads; the tightened mask
-   above keeps it from bleeding into the text content area. */
+   Crank saturation/brightness so the hue actually reads.
+   Reduce height and tighten mask so the blurred element cannot visually
+   bleed past the header zone into the carousel or body text below. */
+body.single-case_study .site__gradient {
+  height: 52vh;
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 18%, transparent 52%);
+  mask-image: linear-gradient(to bottom, black 0%, black 18%, transparent 52%);
+}
 body.single-case_study.is-loaded .site__gradient {
-  opacity: 0.65;
-  filter: blur(60px) saturate(220%) brightness(0.55);
+  opacity: 0.75;
+  filter: blur(55px) saturate(240%) brightness(0.50);
 }
 
 
@@ -736,9 +742,11 @@ body:not(.is-loaded) .main-nav {
   color: inherit;
   position: relative;
   border-radius: 20px;
-  overflow: hidden;
+  overflow: visible;
+  isolation: isolate;
+  --card-bg: none;
   cursor: pointer;
-  background: #0a0a12;
+  background: transparent;
   box-shadow:
     0 4px 24px rgba(0, 0, 0, 0.5),
     0 0 0 1px rgba(255, 255, 255, 0.06);
@@ -748,10 +756,32 @@ body:not(.is-loaded) .main-nav {
 }
 
 .case-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-6px) scale(1.02);
   box-shadow:
     0 24px 64px rgba(0, 0, 0, 0.7),
     0 0 0 1px rgba(255, 255, 255, 0.13);
+}
+
+/* Image-derived ambient glow — blurred copy of card image, offset below like a box-shadow */
+.case-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--card-bg, none);
+  background-size: cover;
+  background-position: center;
+  border-radius: 20px;
+  filter: blur(22px) saturate(2.5) brightness(0.45);
+  opacity: 0;
+  z-index: -1;
+  transform: scale(0.94) translateY(12px);
+  transition: opacity 0.5s cubic-bezier(0.4,0,0.2,1), transform 0.5s cubic-bezier(0.4,0,0.2,1);
+  pointer-events: none;
+}
+
+.case-card:hover::after {
+  opacity: 0.85;
+  transform: scale(1.02) translateY(18px);
 }
 
 .case-card--wide {
@@ -762,13 +792,11 @@ body:not(.is-loaded) .main-nav {
 .case-card__media {
   position: absolute;
   inset: 0;
+  border-radius: 20px;
+  background-color: #0a0a12;
   background-size: cover;
   background-position: center;
-  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.case-card:hover .case-card__media {
-  transform: scale(1.04);
+  overflow: hidden; /* clips the bg-image to rounded corners now card is overflow:visible */
 }
 
 .case-card__media::after {
@@ -990,16 +1018,6 @@ body.is-loaded .case-studies {
   justify-content: space-between;
   margin-bottom: var(--space-2);
 }
-
-.projects__see-all {
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: rgba(255, 255, 255, 0.3);
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-.projects__see-all:hover { color: rgba(255, 255, 255, 0.8); }
 
 .projects__showcase {
   position: relative;
@@ -1762,6 +1780,8 @@ body.is-loaded .nav-back {
   display: flex;
   align-items: center;
   gap: var(--space-1);
+  position: relative;
+  z-index: 1;
 }
 
 .testimonial__avatar {
@@ -1778,6 +1798,15 @@ body.is-loaded .nav-back {
   font-size: 1rem;
   letter-spacing: 0.04em;
   color: rgba(255,255,255,0.75);
+}
+
+.testimonial__avatar-img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  display: block;
 }
 
 .testimonial__name {
@@ -1915,21 +1944,47 @@ body.is-loaded .nav-back {
 
 .related-card {
   border-radius: 16px;
-  overflow: hidden;
+  overflow: visible;
+  isolation: isolate;
+  --card-bg: none;
+  position: relative;
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.07);
   text-decoration: none;
   display: block;
-  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), border-color 0.3s, box-shadow 0.3s;
+  transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94), border-color 0.3s, box-shadow 0.3s;
 }
 .related-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-6px) scale(1.02);
   border-color: rgba(255,255,255,0.14);
   box-shadow: 0 20px 60px rgba(0,0,0,0.5);
 }
 
+/* Image-derived ambient glow */
+.related-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--card-bg, none);
+  background-size: cover;
+  background-position: center;
+  border-radius: 16px;
+  filter: blur(22px) saturate(2.5) brightness(0.45);
+  opacity: 0;
+  z-index: -1;
+  transform: scale(0.94) translateY(12px);
+  transition: opacity 0.5s cubic-bezier(0.4,0,0.2,1), transform 0.5s cubic-bezier(0.4,0,0.2,1);
+  pointer-events: none;
+}
+.related-card:hover::before {
+  opacity: 0.85;
+  transform: scale(1.02) translateY(18px);
+}
+
 .related-card__thumb {
   aspect-ratio: 16 / 9;
+  border-radius: 16px 16px 0 0;
+  overflow: hidden;
   background-size: cover;
   background-position: center;
 }
@@ -1940,6 +1995,8 @@ body.is-loaded .nav-back {
 .related-card__body {
   padding: var(--space-1) var(--space-1) var(--space-2);
   border-top: 1px solid rgba(255,255,255,0.05);
+  border-radius: 0 0 16px 16px;
+  background: rgba(255,255,255,0.03); /* glass bg clipped to bottom half now card is overflow:visible */
 }
 
 .related-card__type {
@@ -2020,7 +2077,7 @@ body.is-loaded .nav-back {
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
   gap: var(--section-gap);
-  align-items: center;
+  align-items: stretch;      /* photo fills the same height as the text column */
   padding: var(--section-gap) 0;
   border-bottom: 1px solid rgba(255,255,255,0.06);
   margin-bottom: var(--section-gap);
@@ -2067,16 +2124,18 @@ body.is-loaded .nav-back {
 .about-hero__photo {
   border-radius: var(--radius-card);
   overflow: hidden;
-  aspect-ratio: 3 / 4;
   position: relative;
-  /* Placeholder — replace with <img> in WordPress */
-  background:
-    linear-gradient(180deg, transparent 45%, rgba(5,6,15,0.85) 100%),
-    linear-gradient(135deg, #1c0d35 0%, #3a1a08 100%);
-  box-shadow:
-    0 60px 140px rgba(0,0,0,0.8),
-    0 0 0 1px rgba(255,255,255,0.08),
-    inset 0 1px 0 rgba(255,255,255,0.12);
+  height: 100%;
+  min-height: 380px;
+}
+
+.about-hero__photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 55%, rgba(5,6,15,0.88) 100%);
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* Replace this entire div with <img> in WordPress */
@@ -2098,6 +2157,7 @@ body.is-loaded .nav-back {
   bottom: var(--space-2);
   left: var(--space-2);
   right: var(--space-2);
+  z-index: 2;
 }
 
 .about-hero__photo-name {
@@ -2116,6 +2176,15 @@ body.is-loaded .nav-back {
   color: rgba(255,255,255,0.28);
 }
 
+/* Photo: fill the frame cleanly */
+.about-hero__photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
 @media (max-width: 900px) {
   .about-hero {
     grid-template-columns: 1fr;
@@ -2123,7 +2192,75 @@ body.is-loaded .nav-back {
   .about-hero__text { order: 2; text-align: center; }
   .about-hero__intro { max-width: 100%; }
   .about-hero__actions { justify-content: center; }
-  .about-hero__photo { order: 1; max-width: 280px; margin: 0 auto; }
+  .about-hero__photo { order: 1; max-width: 260px; margin: 0 auto; }
+}
+
+
+/* ── About: Marquee ticker ───────────────────────── */
+
+.about-marquee {
+  overflow: hidden;
+  white-space: nowrap;
+  margin-bottom: var(--section-gap);
+  padding: 1.1rem 0;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  user-select: none;
+  pointer-events: none;
+}
+
+.about-marquee__track {
+  display: inline-flex;
+  gap: 0;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.22);
+  animation: about-marquee-scroll 28s linear infinite;
+  will-change: transform;
+}
+
+@keyframes about-marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.about-marquee__sep {
+  margin: 0 1.5rem;
+  color: var(--accent-orange);
+  opacity: 0.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-marquee__track { animation: none; }
+}
+
+
+/* ── About: Client logo images ─────────────────── */
+
+.about-clients__logo-grid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  margin-top: var(--space-2);
+  padding: var(--space-3) 0;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.about-clients__logo-img {
+  height: 28px;
+  width: auto;
+  max-width: 120px;
+  object-fit: contain;
+  filter: invert(1) brightness(0.5);
+  transition: filter 0.2s;
+}
+
+.about-clients__logo-img:hover {
+  filter: invert(1) brightness(0.85);
 }
 
 
@@ -2480,6 +2617,83 @@ body.is-loaded .nav-back {
 }
 
 
+/* ── About: Hero secondary link ─────────────────── */
+
+.about-hero__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  color: rgba(255,255,255,0.40);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.about-hero__link:hover { color: rgba(255,255,255,0.75); }
+
+
+/* ── About: Press / articles ─────────────────────── */
+
+.about-press { margin-bottom: var(--section-gap); }
+
+.about-press__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.about-press__card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  transition: transform 0.3s, border-color 0.3s;
+}
+.about-press__card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255,255,255,0.14);
+}
+
+.about-press__card-img {
+  aspect-ratio: 16 / 9;
+  background-size: cover;
+  background-position: center;
+}
+
+.about-press__card-body {
+  padding: var(--space-1);
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.about-press__card-tag {
+  display: block;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(255,255,255,0.30);
+  margin-bottom: 4px;
+}
+
+.about-press__card-title {
+  margin: 0;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: var(--step-1);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-main);
+  line-height: 1.1;
+}
+
+@media (max-width: 768px) {
+  .about-press__grid { grid-template-columns: 1fr; }
+}
+
+
 /* ── Ghost button (secondary) ────────────────────── */
 
 .btn-ghost {
@@ -2577,12 +2791,11 @@ button:focus-visible {
   opacity: 1;
 }
 
-/* Also brighten the border and lift the specular on hover */
+/* Brighten the border ring on hover */
 .case-card:hover {
   box-shadow:
     0 24px 64px rgba(0, 0, 0, 0.7),
-    0 0 0 1px rgba(255, 255, 255, 0.22),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    0 0 0 1px rgba(255, 255, 255, 0.22);
 }
 
 /* Stats bar: cursor spotlight */
@@ -2728,6 +2941,14 @@ button:focus-visible {
   margin-bottom: 0;
 }
 
+/* Clip the carousel frame's massive box-shadow (0 60px 140px black) so it
+   doesn't bleed down into the next content block and darken its text.
+   -50vw on the sides allows the hero-carousel's negative-margin full-bleed;
+   -200px top allows card shadows to peek upward; 0 bottom clips exactly. */
+.block--carousel {
+  clip-path: inset(-200px -50vw 0 -50vw);
+}
+
 /* ── Header: hide CTA pill on tiny screens to avoid crowding ─── */
 @media (max-width: 480px) {
   .site-header .cta-pill {
@@ -2814,11 +3035,188 @@ button:focus-visible {
   .contact-section { padding: var(--space-3) var(--space-2); }
 }
 
+/* ── "More Work" — View all pill button ────────────────────────── */
+
+.projects__view-all {
+  padding: var(--space-3) 0 var(--space-4);
+  display: flex;
+  justify-content: center;
+}
+
+.projects__view-all__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  text-decoration: none;
+  color: rgba(255,255,255,0.50);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  padding: 1em 2.5em;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: var(--radius-pill);
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: color 0.25s, border-color 0.25s, background 0.25s;
+}
+
+.projects__view-all__link:hover {
+  color: var(--text-main);
+  border-color: rgba(255,255,255,0.32);
+  background: rgba(255,255,255,0.06);
+}
+
+.projects__view-all__title { /* inline text — inherits from link */ }
+
+.projects__view-all__arrow {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.projects__view-all__link:hover .projects__view-all__arrow {
+  transform: translateX(5px);
+}
+
+
+/* ── Case Studies Archive Page ────────────────────────────────── */
+
+.work-archive {
+  padding: 0 var(--gutter) var(--space-5);
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.work-archive__header {
+  padding-top: clamp(3rem, 6vw, 5rem);
+  margin-bottom: var(--space-4);
+}
+
+.work-archive__label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgba(255,255,255,0.30);
+  margin: 0 0 0.75rem;
+}
+
+.work-archive__title {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(5rem, 13vw, 11rem);
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--text-main);
+  margin: 0;
+  line-height: 0.85;
+}
+
+.work-archive__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+/* Glassmorphic card with CSS-variable ambient glow.
+   --card-bg is set per-card from PHP inline style so ::before
+   can mirror the image as a blurred halo behind the card.      */
+.work-card {
+  --card-bg: none;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  isolation: isolate;
+  border-radius: var(--radius-card);
+  border: 1px solid rgba(255,255,255,0.09);
+  overflow: visible;   /* glow must spill outside card boundary */
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+  cursor: pointer;
+  transition:
+    transform  0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    border-color 0.4s,
+    box-shadow 0.4s;
+}
+
+/* Image-derived ambient glow — card-shaped, offset below like a box-shadow */
+.work-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--card-bg, none);
+  background-size: cover;
+  background-position: center;
+  border-radius: var(--radius-card);
+  filter: blur(22px) saturate(2.5) brightness(0.45);
+  opacity: 0;
+  z-index: -1;
+  transform: scale(0.94) translateY(12px);
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.work-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: rgba(255,255,255,0.18);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+}
+
+.work-card:hover::before {
+  opacity: 0.85;
+  transform: scale(1.02) translateY(18px);
+}
+
+.work-card__media {
+  border-radius: calc(var(--radius-card) - 1px) calc(var(--radius-card) - 1px) 0 0;
+  aspect-ratio: 16 / 9;
+  background-size: cover;
+  background-position: center;
+  background-color: rgba(255,255,255,0.04);
+  overflow: hidden;
+}
+
+.work-card__body {
+  padding: var(--space-1) var(--space-1) calc(var(--space-1) + 6px);
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.work-card__type {
+  display: block;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgba(255,255,255,0.28);
+  margin-bottom: 5px;
+}
+
+.work-card__title {
+  margin: 0;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: var(--step-1);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-main);
+  line-height: 1;
+}
+
+@media (max-width: 1024px) {
+  .work-archive__grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .work-archive__grid { grid-template-columns: 1fr; }
+  .work-archive__title { font-size: clamp(4rem, 17vw, 6rem); }
+}
+
+
 /* ── Accessibility: honour reduced motion for all transitions ─── */
 @media (prefers-reduced-motion: reduce) {
   .block--split,
   .gallery-item,
   .related-card,
+  .work-card,
   .case-card,
   .service-card,
   .client-pill,
