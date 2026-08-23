@@ -83,13 +83,20 @@ get_header();
       }
       if ($n === 5) {
           echo '<section class="block block--gallery"><div class="masonry-grid">';
-          foreach ($imgs as $url) {
-              echo '<div class="masonry-item" style="background-image:url(\'' . esc_url($url) . '\')"></div>';
+          foreach ($imgs as $item) {
+              echo '<div class="masonry-item js-lightbox" '
+                  . 'style="background-image:url(\'' . esc_url($item['thumb']) . '\')" '
+                  . 'data-lightbox="' . esc_url($item['full']) . '" '
+                  . 'tabindex="0" role="button" aria-label="View image">'
+                  . '</div>';
           }
           echo '</div></section>';
       } else {
-          foreach ($imgs as $url) {
-              echo '<section class="block block--image"><img src="' . esc_url($url) . '" alt="" class="block__img" loading="lazy"></section>';
+          foreach ($imgs as $item) {
+              echo '<section class="block block--image">'
+                  . '<img src="' . esc_url($item['thumb']) . '" alt="" class="block__img js-lightbox" '
+                  . 'data-lightbox="' . esc_url($item['full']) . '" loading="lazy">'
+                  . '</section>';
           }
       }
   };
@@ -99,9 +106,10 @@ get_header();
 
       // Accumulate consecutive image blocks — don't render them yet
       if ($layout === 'image') :
-          $img_id  = $block['image'] ?? 0;
-          $img_url = $img_id ? wp_get_attachment_image_url($img_id, 'cs-hero') : '';
-          if ($img_url) $img_buf[] = $img_url;
+          $img_id    = $block['image'] ?? 0;
+          $img_thumb = $img_id ? wp_get_attachment_image_url($img_id, 'cs-hero') : '';
+          $img_full  = $img_id ? wp_get_attachment_image_url($img_id, 'large')   : '';
+          if ($img_thumb) $img_buf[] = ['thumb' => $img_thumb, 'full' => $img_full ?: $img_thumb];
           continue;
       endif;
 
@@ -172,16 +180,20 @@ get_header();
       </section>
 
       <?php elseif ($layout === 'text_and_image') :
-          $heading  = $block['split_heading']  ?? '';
-          $copy     = $block['copy']           ?? '';
-          $img_id   = $block['image']          ?? 0;
-          $img_url  = $img_id ? wp_get_attachment_image_url($img_id, 'cs-hero') : '';
-          $reversed = $block['reverse_layout'] ?? false;
+          $heading   = $block['split_heading']  ?? '';
+          $copy      = $block['copy']           ?? '';
+          $img_id    = $block['image']          ?? 0;
+          $img_url   = $img_id ? wp_get_attachment_image_url($img_id, 'cs-hero') : '';
+          $img_full  = $img_id ? wp_get_attachment_image_url($img_id, 'large')   : $img_url;
+          $reversed  = $block['reverse_layout'] ?? false;
       ?>
       <!-- Block · Split 50/50 -->
       <section class="block block--split<?php echo $reversed ? ' is-reversed' : ''; ?>">
         <?php if ($img_url) : ?>
-          <div class="split__media" style="background-image:url('<?php echo esc_url($img_url); ?>')"></div>
+          <div class="split__media js-lightbox"
+               style="background-image:url('<?php echo esc_url($img_url); ?>')"
+               data-lightbox="<?php echo esc_url($img_full); ?>"
+               tabindex="0" role="button" aria-label="View image"></div>
         <?php endif; ?>
         <div class="split__content">
           <?php if ($heading) : ?><h2 class="split__heading"><?php echo esc_html($heading); ?></h2><?php endif; ?>
@@ -260,11 +272,15 @@ get_header();
       <section class="block block--gallery">
         <div class="masonry-grid">
           <?php foreach ($gallery_images as $gi) :
-            $gi_id  = $gi['image'] ?? 0;
-            $gi_url = $gi_id ? wp_get_attachment_image_url($gi_id, 'cs-hero') : '';
-            if (!$gi_url) continue;
+            $gi_id    = $gi['image'] ?? 0;
+            $gi_thumb = $gi_id ? wp_get_attachment_image_url($gi_id, 'cs-hero') : '';
+            $gi_full  = $gi_id ? wp_get_attachment_image_url($gi_id, 'large')   : $gi_thumb;
+            if (!$gi_thumb) continue;
           ?>
-          <div class="masonry-item" style="background-image:url('<?php echo esc_url($gi_url); ?>')"></div>
+          <div class="masonry-item js-lightbox"
+               style="background-image:url('<?php echo esc_url($gi_thumb); ?>')"
+               data-lightbox="<?php echo esc_url($gi_full); ?>"
+               tabindex="0" role="button" aria-label="View image"></div>
           <?php endforeach; ?>
         </div>
       </section>

@@ -80,8 +80,13 @@
       moveRaf = requestAnimationFrame(() => placePreview(e.clientX, e.clientY));
     }
 
+    /* Small hide delay so moving directly from one item to the next cancels
+       the fade-out before it starts, preventing a flash as the image swaps. */
+    let hideTimer = null;
+
     projItems.forEach((link) => {
       link.addEventListener('mouseenter', (e) => {
+        clearTimeout(hideTimer);
         const bg = link.dataset.previewBg;
         if (bg && projImg) projImg.style.backgroundImage = bg;
         placePreview(e.clientX, e.clientY);
@@ -89,8 +94,10 @@
         document.addEventListener('mousemove', onMove);
       });
       link.addEventListener('mouseleave', () => {
-        projPreview.classList.remove('is-visible');
         document.removeEventListener('mousemove', onMove);
+        hideTimer = setTimeout(() => {
+          projPreview.classList.remove('is-visible');
+        }, 80);
       });
     });
   }

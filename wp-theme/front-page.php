@@ -66,6 +66,7 @@ get_header();
   <!-- ── Hero Carousel ──────────────────────────────── -->
   <section class="hero-carousel" aria-label="Featured work">
     <div class="carousel__ambient" id="js-ambient"></div>
+    <div class="carousel__ambient-b" id="js-ambient-b"></div>
     <div class="carousel__viewport">
       <div class="carousel__track" id="js-track">
 
@@ -122,6 +123,10 @@ get_header();
   <section class="case-studies" id="case-studies" aria-labelledby="cs-heading">
     <div class="case-studies__header">
       <h2 class="section-title" id="cs-heading">Case Studies</h2>
+      <a href="<?php echo esc_url(get_post_type_archive_link('case_study')); ?>" class="projects__view-all__link" style="margin:0">
+        <span class="projects__view-all__title">View All</span>
+        <span class="projects__view-all__arrow" aria-hidden="true">→</span>
+      </a>
     </div>
 
     <div class="case-studies__grid">

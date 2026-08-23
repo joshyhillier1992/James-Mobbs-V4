@@ -44,6 +44,11 @@ add_action('wp_enqueue_scripts', function () {
     wp_enqueue_script('james-mobbs-nav',    $uri . '/assets/js/nav.js',    [],           $ver, true);
     wp_enqueue_script('james-mobbs-scroll', $uri . '/assets/js/scroll.js', [],           $ver, true);
 
+    // Lightbox — only on case study pages and the archive
+    if (is_singular('case_study') || is_post_type_archive('case_study')) {
+        wp_enqueue_script('james-mobbs-lightbox', $uri . '/assets/js/lightbox.js', [], $ver, true);
+    }
+
     // Per-project variables: accent colour + ambient hero image glow
     if (is_singular('case_study')) {
         $primary  = get_field('header_colour');

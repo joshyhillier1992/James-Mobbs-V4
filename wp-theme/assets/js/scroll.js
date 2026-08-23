@@ -44,6 +44,16 @@
     document.querySelectorAll(SELECTORS).forEach((el) => {
       if (el.closest('.hero-carousel') || el.closest('.case-studies')) return;
       el.classList.add('will-reveal');
+
+      /* Stagger siblings of the same parent so groups animate in sequence.
+         Only applies when there are multiple observed children in one parent. */
+      const parent = el.parentElement;
+      if (parent) {
+        const revealSiblings = Array.from(parent.children).filter(c => c.matches(SELECTORS));
+        const idx = revealSiblings.indexOf(el);
+        if (idx > 0) el.style.setProperty('--reveal-delay', `${idx * 0.07}s`);
+      }
+
       io.observe(el);
     });
   }

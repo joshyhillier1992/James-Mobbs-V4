@@ -65,8 +65,8 @@ $is_project = is_singular('case_study');
     <nav class="main-nav" aria-label="Main navigation">
       <a href="<?php echo esc_url(home_url('/')); ?>"
          class="main-nav__item<?php echo is_front_page() ? ' main-nav__item--active' : ''; ?>">Home</a>
-      <a href="<?php echo esc_url(home_url('/#case-studies')); ?>"
-         class="main-nav__item<?php echo is_singular('case_study') ? ' main-nav__item--active' : ''; ?>">Case Studies</a>
+      <a href="<?php echo esc_url(get_post_type_archive_link('case_study')); ?>"
+         class="main-nav__item<?php echo (is_singular('case_study') || is_post_type_archive('case_study')) ? ' main-nav__item--active' : ''; ?>">Case Studies</a>
       <a href="<?php echo esc_url(get_page_link(get_page_by_path('about'))); ?>"
          class="main-nav__item<?php echo is_page('about') ? ' main-nav__item--active' : ''; ?>">About</a>
     </nav>

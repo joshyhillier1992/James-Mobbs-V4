@@ -12,9 +12,11 @@
 
   const viewport    = document.querySelector('.carousel__viewport');
   const track       = document.getElementById('js-track');
-  const ambient     = document.getElementById('js-ambient');  /* may be null on project pages */
+  const ambientA    = document.getElementById('js-ambient');    /* may be null on project pages */
+  const ambientB    = document.getElementById('js-ambient-b');  /* A/B crossfade layer */
   const pageAmbient = document.querySelector('.site__gradient');
   const noAutoplay  = !!viewport && !!viewport.closest('[data-no-autoplay]');
+  let   ambientSlot = 'a'; /* which layer is currently the "active" one */
 
   /* ── Clone slides for infinite wrap ─────────── */
   const realSlides = Array.from(track.querySelectorAll('.carousel__slide:not(.is-clone)'));
@@ -40,16 +42,10 @@
   function trackGap()   { return parseFloat(getComputedStyle(track).gap) || 12; }
   function centreOffset(idx) {
     const sw = slideWidth(), g = trackGap();
-    /* Measure the true content left edge from viewport left.
-       Works on all widths including wide screens where site-layout is centred. */
-    const siteLayout = document.querySelector('.site-layout');
-    let gutter = 0;
-    if (siteLayout) {
-      const rect = siteLayout.getBoundingClientRect();
-      const pad  = parseFloat(getComputedStyle(siteLayout).paddingLeft) || 0;
-      gutter = Math.max(0, rect.left) + pad;
-    }
-    return gutter - idx * (sw + g);
+    /* Centre the active slide in the viewport — works at any screen width,
+       giving consistent side-peeks regardless of the layout max-width. */
+    const origin = (window.innerWidth - sw) / 2;
+    return origin - idx * (sw + g);
   }
 
   /* ── 3-D transforms ──────────────────────────── */
@@ -66,20 +62,35 @@
     });
   }
 
-  /* ── Ambient crossfade ───────────────────────── */
+  /* ── Ambient crossfade — A/B layers so there's no dark gap between slides ── */
   function setAmbient(realIndex) {
     const img = SLIDES_DATA[realIndex].img;
-    if (ambient) ambient.classList.remove('is-visible');
-    // On case-study pages (noAutoplay) the PHP already set the correct hero image
-    // via wp_add_inline_style — don't overwrite it with homepage slide data.
-    if (pageAmbient && !noAutoplay) pageAmbient.classList.remove('is-visible');
-    setTimeout(() => {
-      if (ambient) { ambient.style.backgroundImage = `url(${img})`; ambient.classList.add('is-visible'); }
-      if (pageAmbient) {
-        if (!noAutoplay) pageAmbient.style.backgroundImage = `url(${img})`;
-        pageAmbient.classList.add('is-visible');
-      }
-    }, 220);
+
+    /* Page-level gradient: simple swap is fine at its slow opacity */
+    if (pageAmbient && !noAutoplay) {
+      pageAmbient.style.backgroundImage = `url(${img})`;
+      pageAmbient.classList.add('is-visible');
+    } else if (pageAmbient) {
+      pageAmbient.classList.add('is-visible');
+    }
+
+    /* Local A/B ambient: paint the incoming layer, fade it in, then fade out the outgoing */
+    if (ambientA && ambientB) {
+      const incoming = ambientSlot === 'a' ? ambientB : ambientA;
+      const outgoing = ambientSlot === 'a' ? ambientA : ambientB;
+      incoming.style.backgroundImage = `url(${img})`;
+      /* Let the browser paint the new background before fading in */
+      requestAnimationFrame(() => {
+        incoming.classList.add('is-visible');
+        /* Fade out the old layer once the new one has started coming in */
+        setTimeout(() => outgoing.classList.remove('is-visible'), 200);
+      });
+      ambientSlot = ambientSlot === 'a' ? 'b' : 'a';
+    } else if (ambientA) {
+      /* Fallback: single-layer (project pages have no ambient) */
+      ambientA.style.backgroundImage = `url(${img})`;
+      ambientA.classList.add('is-visible');
+    }
   }
 
   /* ── Navigate ────────────────────────────────── */
@@ -100,8 +111,10 @@
   /* ── Infinite wrap ───────────────────────────── */
   track.addEventListener('transitionend', (e) => {
     if (e.propertyName !== 'transform') return;
-    if (domCurrent === 0)     setTimeout(() => moveTo(N,   false), SNAP_DELAY);
-    if (domCurrent === N + 1) setTimeout(() => moveTo(1,   false), SNAP_DELAY);
+    /* Guard: don't snap while the user is mid-drag — the next onDragEnd will handle it */
+    if (isDragging) return;
+    if (domCurrent === 0)     setTimeout(() => { if (!isDragging) moveTo(N,   false); }, SNAP_DELAY);
+    if (domCurrent === N + 1) setTimeout(() => { if (!isDragging) moveTo(1,   false); }, SNAP_DELAY);
   });
 
   /* ── Edge-sweep timer ───────────────────────────────────────────
@@ -209,10 +222,31 @@
   /* Prevent native browser drag (links/images) from hijacking the custom drag */
   viewport.addEventListener('dragstart', (e) => e.preventDefault());
 
-  /* Mouse — preventDefault restores reliable drag; tap-to-navigate handled manually in mouseup */
-  viewport.addEventListener('mousedown',  (e) => { e.preventDefault(); onDragStart(e.clientX); });
-  document.addEventListener('mousemove',  (e) => onDragMove(e.clientX));
+  /* Touch events fire before their synthetic mouse equivalents.
+     Flag when touch is active so mouse handlers don't double-fire on mobile. */
+  let isTouchActive = false;
+
+  /* Touch */
+  viewport.addEventListener('touchstart', (e) => {
+    isTouchActive = true;
+    onDragStart(e.touches[0].clientX);
+  }, { passive: true });
+  viewport.addEventListener('touchmove',  (e) => onDragMove(e.touches[0].clientX), { passive: true });
+  viewport.addEventListener('touchend',   () => {
+    onDragEnd();
+    /* Clear the touch flag after the browser's ~300ms synthetic-mouse window */
+    setTimeout(() => { isTouchActive = false; }, 350);
+  });
+
+  /* Mouse — only fires on genuine pointer (not synthetic post-touch events) */
+  viewport.addEventListener('mousedown', (e) => {
+    if (isTouchActive) return;
+    e.preventDefault();
+    onDragStart(e.clientX);
+  });
+  document.addEventListener('mousemove',  (e) => { if (!isTouchActive) onDragMove(e.clientX); });
   document.addEventListener('mouseup',    (e) => {
+    if (isTouchActive) return;
     onDragEnd();
     /* If it was a tap (no significant drag), navigate any <a> under the pointer */
     if (!wasSwipe) {
@@ -221,24 +255,32 @@
     }
   });
 
-  /* Touch */
-  viewport.addEventListener('touchstart', (e) => onDragStart(e.touches[0].clientX), { passive: true });
-  viewport.addEventListener('touchmove',  (e) => onDragMove(e.touches[0].clientX),  { passive: true });
-  viewport.addEventListener('touchend',   ()  => onDragEnd());
-
-  /* Trackpad two-finger horizontal swipe */
-  let wheelAccum  = 0;
+  /* Trackpad two-finger horizontal swipe.
+     Uses a debounced cooldown: every incoming wheel event pushes the release
+     timer forward, so momentum-scroll events can't retrigger after the
+     physical gesture ends (fixed timeouts release too early on macOS). */
+  let wheelAccum    = 0;
   let wheelCooldown = false;
+  let wheelTimer    = null;
+
   viewport.addEventListener('wheel', (e) => {
     if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
     e.preventDefault();
+
+    /* Always extend the gate: resets after wheel events fully stop (900ms quiet). */
+    clearTimeout(wheelTimer);
+    wheelTimer = setTimeout(() => {
+      wheelCooldown = false;
+      wheelAccum    = 0;
+    }, 900);
+
     if (wheelCooldown) return;
+
     wheelAccum += e.deltaX;
     if (Math.abs(wheelAccum) >= DRAG_THRESHOLD) {
       wheelCooldown = true;
       wheelAccum > 0 ? goTo(domCurrent + 1) : goTo(domCurrent - 1);
       wheelAccum = 0;
-      setTimeout(() => { wheelCooldown = false; }, 600);
     }
   }, { passive: false });
 
@@ -256,7 +298,8 @@
   requestAnimationFrame(() => {
     moveTo(1, false);
     const img = SLIDES_DATA[0].img;
-    if (ambient) { ambient.style.backgroundImage = `url(${img})`; ambient.classList.add('is-visible'); }
+    /* Seed layer A with the first slide immediately */
+    if (ambientA) { ambientA.style.backgroundImage = `url(${img})`; ambientA.classList.add('is-visible'); }
     if (pageAmbient) {
       if (!noAutoplay) pageAmbient.style.backgroundImage = `url(${img})`;
       pageAmbient.classList.add('is-visible');
