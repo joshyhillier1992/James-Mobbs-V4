@@ -71,8 +71,7 @@ get_header();
   $img_buf = [];
 
   // Flush buffered consecutive images.
-  // Exactly 5 → designed masonry grid. Any other count → individual full-width blocks.
-  // Runs > 5 are split: first 5 as masonry, remainder recurse.
+  // 5 → designed masonry grid. 2-4 → simple responsive gallery grid. 1 → full-width. >5 → recurse.
   $flush_images = function (array $imgs) use (&$flush_images) {
       if (empty($imgs)) return;
       $n = count($imgs);
@@ -85,6 +84,17 @@ get_header();
           echo '<section class="block block--gallery"><div class="masonry-grid">';
           foreach ($imgs as $item) {
               echo '<div class="masonry-item js-lightbox" '
+                  . 'style="background-image:url(\'' . esc_url($item['thumb']) . '\')" '
+                  . 'data-lightbox="' . esc_url($item['full']) . '" '
+                  . 'tabindex="0" role="button" aria-label="View image">'
+                  . '</div>';
+          }
+          echo '</div></section>';
+      } elseif ($n >= 2) {
+          $col = $n === 2 ? 'gallery-grid--2col' : 'gallery-grid--3col';
+          echo '<section class="block block--gallery"><div class="gallery-grid ' . $col . '">';
+          foreach ($imgs as $item) {
+              echo '<div class="gallery-item js-lightbox" '
                   . 'style="background-image:url(\'' . esc_url($item['thumb']) . '\')" '
                   . 'data-lightbox="' . esc_url($item['full']) . '" '
                   . 'tabindex="0" role="button" aria-label="View image">'
@@ -267,17 +277,29 @@ get_header();
       <?php elseif ($layout === 'gallery') :
           $gallery_images = $block['gallery_images'] ?: [];
       ?>
-      <!-- Block · Masonry Gallery (manually added via ACF) -->
-      <?php if (!empty($gallery_images)) : ?>
+      <!-- Block · Gallery (manually added via ACF) — masonry for 5, grid for 2-4 -->
+      <?php
+      $valid_gi = array_filter($gallery_images, fn($gi) => !empty($gi['image']));
+      if (!empty($valid_gi)) :
+          $gi_n = count($valid_gi);
+          if ($gi_n === 5) {
+              $wrap_class = 'masonry-grid';
+              $item_class = 'masonry-item';
+          } else {
+              $col_class  = $gi_n === 2 ? 'gallery-grid--2col' : 'gallery-grid--3col';
+              $wrap_class = 'gallery-grid ' . $col_class;
+              $item_class = 'gallery-item';
+          }
+      ?>
       <section class="block block--gallery">
-        <div class="masonry-grid">
-          <?php foreach ($gallery_images as $gi) :
+        <div class="<?php echo esc_attr($wrap_class); ?>">
+          <?php foreach ($valid_gi as $gi) :
             $gi_id    = $gi['image'] ?? 0;
             $gi_thumb = $gi_id ? wp_get_attachment_image_url($gi_id, 'cs-hero') : '';
             $gi_full  = $gi_id ? wp_get_attachment_image_url($gi_id, 'large')   : $gi_thumb;
             if (!$gi_thumb) continue;
           ?>
-          <div class="masonry-item js-lightbox"
+          <div class="<?php echo esc_attr($item_class); ?> js-lightbox"
                style="background-image:url('<?php echo esc_url($gi_thumb); ?>')"
                data-lightbox="<?php echo esc_url($gi_full); ?>"
                tabindex="0" role="button" aria-label="View image"></div>

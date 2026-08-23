@@ -2,50 +2,57 @@
 defined('ABSPATH') || exit;
 
 // ── Queries ──────────────────────────────────────────────
+// Carousel: only posts explicitly promoted via the "In Carousel" checkbox
 $carousel_query = new WP_Query([
     'post_type'      => 'case_study',
     'posts_per_page' => 10,
     'orderby'        => 'menu_order',
     'order'          => 'ASC',
-    'meta_query'     => [['key' => 'homepage_image', 'compare' => 'EXISTS']],
+    'meta_query'     => [
+        ['key' => 'in_carousel', 'value' => '1', 'compare' => '='],
+        ['key' => 'homepage_image', 'compare' => 'EXISTS'],
+    ],
     'no_found_rows'  => true,
 ]);
 
+// Collect carousel IDs so they can be excluded from sections below
+$carousel_ids = [];
+foreach ($carousel_query->posts as $p) { $carousel_ids[] = $p->ID; }
+
+// Featured Case Studies grid — exclude carousel posts to avoid duplicates
 $featured_query = new WP_Query([
     'post_type'      => 'case_study',
     'posts_per_page' => 3,
     'orderby'        => 'menu_order',
     'order'          => 'ASC',
+    'post__not_in'   => $carousel_ids,
     'meta_query'     => [['key' => 'featured', 'value' => '1', 'compare' => '=']],
     'no_found_rows'  => true,
 ]);
 
-// Fallback: if no posts are marked featured, use first 3 by menu_order
+// Fallback: if no posts are marked featured, use first 3 (still excluding carousel)
 if (!$featured_query->have_posts()) {
     $featured_query = new WP_Query([
         'post_type'      => 'case_study',
         'posts_per_page' => 3,
         'orderby'        => 'menu_order',
         'order'          => 'ASC',
+        'post__not_in'   => $carousel_ids,
         'no_found_rows'  => true,
     ]);
 }
 
-// IDs already shown in case studies grid — exclude from the list below
+// IDs shown in the featured grid
 $featured_ids = [];
-if ($featured_query->have_posts()) {
-    foreach ($featured_query->posts as $p) {
-        $featured_ids[] = $p->ID;
-    }
-}
+foreach ($featured_query->posts as $p) { $featured_ids[] = $p->ID; }
 
-// Remaining projects for the "More Work" list
+// More Work list — exclude both carousel and featured posts
 $more_query = new WP_Query([
     'post_type'      => 'case_study',
     'posts_per_page' => 5,
     'orderby'        => 'menu_order',
     'order'          => 'ASC',
-    'post__not_in'   => $featured_ids,
+    'post__not_in'   => array_merge($carousel_ids, $featured_ids),
     'no_found_rows'  => false,
 ]);
 
@@ -193,11 +200,7 @@ get_header();
         <li class="project-item">
           <a href="<?php the_permalink(); ?>" class="project-item__link"
              <?php if ($img_url) : ?>data-preview-bg="url('<?php echo esc_url($img_url); ?>')"<?php endif; ?>>
-            <span class="project-item__num"><?php echo str_pad($list_num, 2, '0', STR_PAD_LEFT); ?></span>
             <span class="project-item__title"><?php the_title(); ?></span>
-            <?php if ($type_tag) : ?>
-              <span class="project-item__type"><?php echo esc_html($type_tag); ?></span>
-            <?php endif; ?>
           </a>
         </li>
         <?php

@@ -25,6 +25,15 @@ acf_add_local_field_group([
 
         // ── V4 Homepage fields ───────────────────────────────
         [
+            'key'          => 'field_v4_in_carousel',
+            'label'        => 'In Carousel',
+            'name'         => 'in_carousel',
+            'type'         => 'true_false',
+            'instructions' => 'Tick to promote this project into the homepage hero carousel.',
+            'default_value'=> 0,
+            'ui'           => 1,
+        ],
+        [
             'key'          => 'field_v4_featured',
             'label'        => 'Featured (Case Studies grid)',
             'name'         => 'featured',

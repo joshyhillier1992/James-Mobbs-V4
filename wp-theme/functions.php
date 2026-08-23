@@ -77,7 +77,10 @@ function jmv4_get_slides_data() {
         'posts_per_page' => 10,
         'orderby'        => 'menu_order',
         'order'          => 'ASC',
-        'meta_query'     => [['key' => 'homepage_image', 'compare' => 'EXISTS']],
+        'meta_query'     => [
+            ['key' => 'in_carousel', 'value' => '1', 'compare' => '='],
+            ['key' => 'homepage_image', 'compare' => 'EXISTS'],
+        ],
         'no_found_rows'  => true,
     ]);
     if ($q->have_posts()) {
