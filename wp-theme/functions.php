@@ -69,6 +69,19 @@ add_action('wp_enqueue_scripts', function () {
     }
 });
 
+/* ── Vimeo URL → embed URL helper ───────────────── */
+function jmv4_vimeo_embed($url, $autoplay = 0) {
+    if (!$url) return '';
+    if (strpos($url, 'player.vimeo.com') !== false) {
+        return add_query_arg(['autoplay' => $autoplay, 'title' => 0, 'byline' => 0, 'portrait' => 0], $url);
+    }
+    if (preg_match('/vimeo\.com\/(?:video\/)?(\d+)/', $url, $m)) {
+        return 'https://player.vimeo.com/video/' . $m[1]
+            . '?autoplay=' . $autoplay . '&title=0&byline=0&portrait=0';
+    }
+    return $url;
+}
+
 /* ── Build SLIDES_DATA for carousel ambient ─────── */
 function jmv4_get_slides_data() {
     $slides = [];

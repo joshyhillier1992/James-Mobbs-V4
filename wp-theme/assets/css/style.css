@@ -233,141 +233,61 @@ body.single-case_study.is-loaded .site__gradient {
   color: rgba(0, 0, 0, 0.75);
 }
 
-/* ── Close button — fades in after expansion settles ── */
+/* ── Close button — × icon, top-right corner of expanded blob ── */
 #close-blob {
   position: absolute;
-  bottom: 2.5rem;
-  left: 50%;
-  transform: translateX(-50%);
+  top: var(--space-2);
+  right: var(--space-2);
   z-index: 50;
-  background: rgba(0, 0, 0, 0.20);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  color: rgba(255, 255, 255, 0.70);
-  font-family: "Alexandria", sans-serif;
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  padding: 8px 20px;
-  border-radius: 999px;
-  cursor: pointer;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.5s ease;
-}
-#close-blob:hover { color: #fff; }
-/* Delayed fade-in after the expand animation settles */
-.blob-logo.is-expanded #close-blob {
-  opacity: 1;
-  pointer-events: auto;
-  transition: opacity 0.5s ease 0.6s;
-}
-
-/* ── Blob "play with me" — centred screen hint ──────── */
-
-
-/* ── Blob video player ─────────────────────────────── */
-
-.blob-video-wrap {
-  position: absolute;
-  inset: 0;
-  background: rgba(4, 4, 14, 0.94);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.4s ease;
-  z-index: 20;
-  border-radius: inherit;
-}
-
-.blob-video-wrap.is-active {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.blob-video-frame {
-  width: min(88vw, 1160px);
-  aspect-ratio: 16 / 9;
-  border-radius: 14px;
-  border: none;
-  box-shadow: 0 32px 96px rgba(0, 0, 0, 0.8);
-}
-
-.blob-video-close {
-  position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  color: rgba(255, 255, 255, 0.8);
+  background: rgba(0, 0, 0, 0.20);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: rgba(255, 255, 255, 0.65);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s, color 0.2s;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  z-index: 2;
-}
-.blob-video-close:hover {
-  background: rgba(255, 255, 255, 0.16);
-  color: #fff;
-}
-
-/* Showreel button — centred in the expanded blob */
-.blob-showreel {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 10;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.6s ease 1s;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.25rem;
+  transition: opacity 0.5s ease, background 0.2s, color 0.2s;
 }
-.blob-logo.is-expanded .blob-showreel {
+#close-blob:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+.blob-logo.is-expanded #close-blob {
   opacity: 1;
   pointer-events: auto;
+  transition: opacity 0.5s ease 0.5s, background 0.2s, color 0.2s;
 }
-.blob-showreel__btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 14px 32px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.10);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  color: #ffffff;
-  text-decoration: none;
-  font-family: "Alexandria", system-ui, sans-serif;
-  font-size: 0.9rem;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  transition: background 0.2s, border-color 0.2s;
+
+/* ── Showreel page ──────────────────────────────────── */
+.showreel-page__embed {
+  padding: var(--section-gap) var(--gutter) 0;
 }
-.blob-showreel__btn:hover {
-  background: rgba(255, 255, 255, 0.18);
-  border-color: rgba(255, 255, 255, 0.4);
+.showreel-page__contact {
+  padding: var(--section-gap) var(--gutter) var(--section-gap);
 }
-.blob-showreel__hint {
-  font-size: 0.65rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.3);
+.showreel-page__contact .about-cta {
+  margin-bottom: 0;
+}
+.showreel-page__ratio {
+  position: relative;
+  padding-top: 56.25%;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background: #0c0c18;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+}
+.showreel-page__iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .brand-pill__logo {

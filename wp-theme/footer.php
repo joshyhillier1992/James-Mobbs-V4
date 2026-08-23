@@ -30,8 +30,10 @@ $year     = date('Y');
   <div class="nav-drawer__links">
     <a href="<?php echo esc_url(home_url('/')); ?>"
        class="nav-drawer__link<?php echo is_front_page() ? ' is-active' : ''; ?>">Home</a>
-    <a href="<?php echo esc_url(home_url('/#case-studies')); ?>"
-       class="nav-drawer__link<?php echo is_singular('case_study') ? ' is-active' : ''; ?>">Work</a>
+    <a href="<?php echo esc_url(get_post_type_archive_link('case_study')); ?>"
+       class="nav-drawer__link<?php echo (is_singular('case_study') || is_post_type_archive('case_study')) ? ' is-active' : ''; ?>">Case Studies</a>
+    <a href="<?php echo esc_url(get_page_link(get_page_by_path('showreel'))); ?>"
+       class="nav-drawer__link<?php echo is_page('showreel') ? ' is-active' : ''; ?>">Showreel</a>
     <a href="<?php echo esc_url(get_page_link(get_page_by_path('about'))); ?>"
        class="nav-drawer__link<?php echo is_page('about') ? ' is-active' : ''; ?>">About</a>
     <a href="#contact" class="nav-drawer__link">Contact</a>

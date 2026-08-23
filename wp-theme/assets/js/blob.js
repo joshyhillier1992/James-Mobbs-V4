@@ -352,44 +352,11 @@
       container.addEventListener('transitionend', onDone);
     }
 
-    /* ── Showreel video player ───────────────────────────────── */
-    var showreelBtn   = document.querySelector('.blob-showreel__btn');
-    var videoWrap     = document.getElementById('blob-video-wrap');
-    var videoFrame    = document.getElementById('blob-video-frame');
-    var videoCloseBtn = document.getElementById('blob-video-close');
-
-    function closeVideo() {
-      if (!videoWrap) return;
-      videoWrap.classList.remove('is-active');
-      setTimeout(function () { if (videoFrame) videoFrame.src = ''; }, 420);
-    }
-
-    if (showreelBtn && videoWrap && videoFrame) {
-      showreelBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        var src = showreelBtn.dataset.src || '';
-        if (src && src.indexOf('SHOWREEL_ID') === -1) {
-          videoFrame.src = src;
-          videoWrap.classList.add('is-active');
-        } else {
-          window.open('https://vimeo.com/jamesmobbs', '_blank');
-        }
-      });
-    }
-
-    if (videoCloseBtn) {
-      videoCloseBtn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        closeVideo();
-      });
-    }
-
     /* ── Events ─────────────────────────────────────────────── */
-    container.addEventListener('click', function (e) { if (!isExpanded && !e.target.closest('a')) expand(); });
+    container.addEventListener('click', function (e) { if (!isExpanded && !e.target.closest('button')) expand(); });
     if (closeBtn) closeBtn.addEventListener('click', function (e) { e.stopPropagation(); collapse(); });
-    if (backdrop) backdrop.addEventListener('click', function () { closeVideo(); collapse(); });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && isExpanded) { closeVideo(); collapse(); } });
+    if (backdrop) backdrop.addEventListener('click', function () { collapse(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && isExpanded) collapse(); });
   });
 
 }());
